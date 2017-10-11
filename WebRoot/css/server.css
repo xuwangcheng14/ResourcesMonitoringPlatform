@@ -1,0 +1,29 @@
+.server-btn-util {
+	margin: 10px 0px 10px 0px;
+	padding: 12px 0px;
+	overflow: hidden;
+}
+
+.server-btn-util > .layui-btn-group {
+	margin-right: 100px;
+}
+
+.server-btn-util > .right-btn-tool {
+	float: right;
+}
+
+#single-save-info,#batch-save-info{
+	display: none;
+}
+.layui-form {
+	margin: 30px;
+}
+
+.setting-parameters .layui-form-label {
+	width: 180px;
+	text-align: left;
+}
+
+.setting-parameters .layui-input-block {
+	margin-left: 180px;
+}

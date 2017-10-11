@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>服务器-神州数码性能测试资源监控平台</title>
+  <link rel="stylesheet" href="libs/layui/css/layui.css">
+  <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="libs/datatables/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/server.css">
+</head>
+<body>
+	<nav class="blog-nav layui-header">
+            <a class="blog-logo" href="index.html">资源监控中心</a>
+            
+            <!-- 导航菜单 -->
+            <ul class="layui-nav" lay-filter="nav">
+                <li class="layui-nav-item">
+                    <a href="index.html" target="_blank"><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
+                </li>
+                <li class="layui-nav-item layui-this">
+                    <a href="#"><i class="fa fa-globe fa-fw"></i>&nbsp;服务器</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="report.html" target="_blank"><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="http://152.55.229.41:8169/commonInfo.html" target="_blank"><i class="fa fa-briefcase fa-fw"></i>&nbsp;资料</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="about.html" target="_blank"><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
+                </li>
+            </ul>
+            <!-- 手机和平板的导航开关 -->
+            <a class="blog-navicon" href="javascript:;">
+                <i class="fa fa-navicon"></i>
+            </a>
+    </nav>
+    <div class="blog-body">
+    	<div class="blog-container">
+    		<div class="blog-main">
+    			<div class="server-btn-util">
+    				<div class="layui-btn-group">
+					  <button class="layui-btn layui-btn-normal" data-type="">全部</button>
+					  <button class="layui-btn layui-btn-primary" data-type="0">Linux</button>
+					  <button class="layui-btn layui-btn-primary" data-type="1">Weblogic</button>
+					</div>
+					<span class="right-btn-tool">
+						<button class="layui-btn">添加服务器</button>
+						<button class="layui-btn">批量操作</button>
+						<button class="layui-btn"><i class="layui-icon">&#x1002;</i></button>
+					</span>					
+    			</div>
+    			<hr>
+    			<table class="layui-table" lay-skin="line row" >
+							<thead>
+								<tr>
+								  <th><input type="checkbox"></th>
+								  <th>#</th>
+								  <th>HOST</th>								  
+								  <th>用户名</th>
+								  <th>密码</th>
+								  <th>类型</th>
+								  <th>添加时间</th>
+								  <th>最近使用时间</th>
+								  <th>备注</th>
+								  <th>操作</th>
+								  
+								</tr>
+							</thead>
+							<tbody>									
+							</tbody>
+						</table>
+    		</div>
+    	</div>
+    </div>
+	<!-- 底部 -->
+    <footer class="blog-footer">
+        <p><span>Copyright</span><span>&copy;</span><span>2017</span><a href="#">神州数码性能测试团队</a><span>Design By Baikapala</span></p>
+        <p>前端框架支持&nbsp;<a href="http://www.layui.com" target="_blank">layui</a></p>
+    </footer>
+    <!--侧边导航-->
+    <ul class="layui-nav layui-nav-tree layui-nav-side blog-nav-left layui-hide" lay-filter="nav">
+        <li class="layui-nav-item">
+             <a href="index.html" target="_blank"><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
+         </li>
+         <li class="layui-nav-item layui-this">
+             <a href="#"><i class="fa fa-globe fa-fw"></i>&nbsp;服务器</a>
+         </li>
+         <li class="layui-nav-item">
+             <a href="report.html" target="_blank"><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
+         </li>
+         <li class="layui-nav-item">
+             <a href="http://152.55.229.41:8169/commonInfo.html" target="_blank"><i class="fa fa-briefcase fa-fw"></i>&nbsp;资料</a>
+         </li>
+         <li class="layui-nav-item">
+             <a href="about.html" target="_blank"><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
+         </li>
+    </ul>
+    <!--遮罩-->
+    <div class="blog-mask animated layui-hide"></div>  
+    <!-- 单条记录保存 -->
+    <div id="single-save-info">
+		<form class="layui-form layui-form-pane" action="">
+			 <div class="layui-form-item">
+			    <label class="layui-form-label">类型</label>
+			    <div class="layui-input-block">
+			      <select name="type" id="type" lay-filter="type-single">
+			        <option value="0" selected>Linux</option>
+			        <option value="1">Weblogic</option>
+			      </select>
+			    </div>
+			  </div>
+			 <div class="layui-form-item">
+			    <label class="layui-form-label">HOST</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="host" id="host" required lay-verify="required" placeholder="IP地址" autocomplete="off" class="layui-input">
+			    </div>
+			  </div>
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">端口号</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="port" id="port" placeholder="Linux默认为22可不填写,其他类型需要填写" autocomplete="off" class="layui-input">
+			    </div>
+			  </div>
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">用户名</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="username" id="username" placeholder="没有则不填" autocomplete="off" class="layui-input">
+			    </div>
+			  </div>
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">密码</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="password" id="password" placeholder="没有则不填" autocomplete="off" class="layui-input">
+			    </div>
+			  </div>
+			  <input type="hidden" name="createTime" id="createTime"/>
+			  <input type="hidden" name="time" id="time"/>			  
+			  <input type="hidden" name="serverId" id="serverId"/>			 
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">备注</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="mark" id="mark" placeholder="如果通过端口转发设置，请备注真实服务器地址" autocomplete="off" class="layui-input">
+			    </div>
+			  </div>
+			  <div class="layui-form-item">
+			      <input type="button" id="setting-parameters" value="附加项设置" class="layui-btn layui-btn-normal"/>
+			  </div>
+			  <input type="hidden" name="parameters" id="parameters"/>
+			   <div class="layui-form-item">
+			      <button class="layui-btn" lay-submit lay-filter="singleEdit">提交</button>
+			      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			  </div>
+		</form>
+	</div> 	
+	<!-- 批量保存 -->
+    <div id="batch-save-info">
+		<form class="layui-form layui-form-pane" action="">
+			 <div class="layui-form-item">
+			    <label class="layui-form-label">类型</label>
+			    <div class="layui-input-block">
+			      <select name="type" id="type" lay-filter="type-batch">
+			        <option value="0" selected>Linux</option>
+			        <option value="1">Weblogic</option>
+			      </select>
+			    </div>
+			  </div>
+			   <div class="layui-form-item layui-form-text">
+			      <textarea name="infos" required lay-verify="required" placeholder="ip,port,username,password,mark,parameter1,paramaeter2,..." class="layui-textarea" rows="8"></textarea>
+			  </div>
+			   <div class="layui-form-item" pane>
+			    <label class="layui-form-label">立即启动</label>
+			    <div class="layui-input-block">
+			      <input type="checkbox" name="testFlag" lay-skin="switch" lay-text="开启|关闭" value="true">
+			    </div>
+			  </div>
+			   <div class="layui-form-item">
+			      <button class="layui-btn" lay-submit lay-filter="batchSave">提交</button>
+			      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			  </div>
+			  <div class="layui-form-item">
+			    <p id="batch-add-server-tip" style="color:#FF5722;">添加格式：主机IP,端口,用户名,密码,备注,javaHome</p>
+			    <p style="color:#FF5722;">相关说明：</p>
+			    <p>1、不需要填写或者留空的请不要省略[备注和附加参数可以批量省略];</p>
+			    <p>2、可以使用中文或者英文格式下的逗号[,或者，]作为分隔符;</p>
+			    <p>3、每次只能添加同类型的信息;</p>
+			    <p>4、开启 <span style="color:red;"> 立即启动 </span>监控将会自动检查每条信息的连通正确性，无法连接的将不会保存。同时开启此选项时将会大大增加保存时间。</p>
+			  </div>
+		</form>
+	</div>
+<script src="libs/jquery.js"></script>
+<script src="libs/layui/layui.js"></script>
+<script src="libs/datatables/js/jquery.dataTables.min.js"></script>
+<script src="js/global.js"></script>
+<script src="js/server.js"></script>
+</body>
+</html>

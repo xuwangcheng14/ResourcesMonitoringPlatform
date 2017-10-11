@@ -1,0 +1,70 @@
+.layui-colla-content {
+	margin-top: 28px;
+	margin-bottom: 28px;
+}
+
+.dcits-table-setting {
+	margin: 5px 0 15px 0;
+}
+
+.layui-form-label {
+    font-weight: bold;
+}
+
+th {
+	white-space:nowrap;
+}
+
+.open-echarts {
+	margin: 20px;
+	height: 370px;
+	width: 830px;
+}
+
+.dynamic-data{
+	cursor:pointer;
+}
+
+.util-page {
+	margin: 20px 25px; 
+}
+
+.util-page-btn {
+	margin-top: 10px;
+}
+
+.util-page-tips {
+	margin-top: 18px;
+	padding:4px;
+}
+
+.util-page-tips > p {
+	color:#F7B824;
+	font-size: 18px;
+}
+
+.layui-colla-icon-refresh {
+	position: absolute;
+    right: 14px;
+    font-weight:bold;
+    top: 0;
+    font-size: 20px;
+}
+
+.layui-form-pane .layui-form-label {
+	width: 260px;
+	text-align: left;
+}
+
+.layui-form-pane .layui-input-block {
+	margin-left: 260px;
+}
+
+.layui-form {
+	margin: 30px;
+}
+
+#exec-command-tips {
+	font-size: 22px;
+	color:#FF5722;
+}

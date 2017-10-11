@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>控制台-神州数码性能测试资源监控平台</title>
+  <link rel="stylesheet" href="libs/layui/css/layui.css">
+  <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="libs/datatables/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+	<nav class="blog-nav layui-header">
+            <a class="blog-logo" href="#">资源监控中心</a>
+            <!-- 导航菜单 -->
+            <ul class="layui-nav" lay-filter="nav">
+                <li class="layui-nav-item layui-this">
+                    <a href="#"><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="server.html" target="_blank"><i class="fa fa-globe fa-fw"></i>&nbsp;服务器</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="report.html" target="_blank"><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="http://152.55.229.41:8169/commonInfo.html" target="_blank"><i class="fa fa-briefcase fa-fw"></i>&nbsp;资料</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="about.html" target="_blank"><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
+                </li>
+            </ul>
+            <!-- 手机和平板的导航开关 -->
+            <a class="blog-navicon" href="javascript:;">
+                <i class="fa fa-navicon"></i>
+            </a>
+    </nav>
+    <div class="blog-body">
+    	<div class="blog-container">
+    	<div class="blog-main">
+    		    <div class="home-tips shadow" name="topView">
+                  <i style="float:left;line-height:17px;" class="fa fa-volume-up"></i>
+                  <div class="home-tips-container"> 
+                  	<span style="color: #009688">服务器的各种警告信息在这里哦，点击查看详细信息!</span>                  
+                  </div>                  
+                </div>   
+              	<div class="dcits-table-setting">
+              		<button class="layui-btn layui-btn-normal layui-btn-small" show-type="columns">信息列显示</button>
+              		<button class="layui-btn layui-btn-normal layui-btn-small" show-type="views">视图显示</button>
+              		<button class="layui-btn layui-btn-normal layui-btn-small" show-type="alert-setting-value">预警设置</button>
+              		<button class="layui-btn layui-btn-normal layui-btn-small" show-type="other-setting">其他设置</button> 
+              		<span style="margin-left: 10px;"><button class="layui-btn layui-btn-warm layui-btn-small" id="show-user-keys">userKey设置</button></span>            		
+              	</div> 
+              	<!-- 其他设置 -->
+              	<div class="layui-form layui-hide" id="other-setting">
+				    	<form class="layui-form layui-form-pane" action="">
+				    			<div class="layui-form-item">
+					    		<label class="layui-form-label">缓存数据达到多少提醒清理[条]</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="maxInfoDataCount" required  lay-verify="required|number" placeholder="根据计算机配置高低斟酌,默认100000" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item" pane>
+								    <label class="layui-form-label">自动清理缓存数据</label>
+								    <div class="layui-input-block">
+								      <input type="checkbox" name="autoClearDataFlag" lay-skin="switch" lay-text="开启|关闭" value="true">
+								    </div>
+								 </div>
+								<div class="layui-form-item">
+					    		<label class="layui-form-label">表格信息刷新频率[ms]</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="intervalTime" required  lay-verify="required|number" placeholder="输入大于零的整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item">
+					    		<label class="layui-form-label">预警公告刷新频率[ms]</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="playNoticIntervalTime" required  lay-verify="required|number" placeholder="输入大于零的整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item">
+						      		<button class="layui-btn" lay-submit lay-filter="other-setting">更新</button>
+						  		</div>
+							</form>	
+				</div>
+              	<!-- 视图显示设置 -->
+              	<div class="layui-form layui-hide" id="views">
+					<div class="layui-form-item">
+				    <label class="layui-form-label">视图设置</label>
+				    <div class="layui-input-block">
+				    	<input type="checkbox" data-column="linux" title="Linux" lay-filter="view" checked/>
+						<input type="checkbox" data-column="weblogic" title="Weblogic" lay-filter="view" checked/>
+						<input type="checkbox" data-column="tomcat" title="Tomcat" lay-filter="view" checked/>
+						<input type="checkbox" data-column="jvm" title="JVM" lay-filter="view" checked/>
+				    </div>
+				    </div>
+				</div>
+				<!-- 列显示设置 -->
+              	<div class="layui-form layui-hide" id="columns">
+					<div class="layui-form-item" id="linux-columns">
+				    <label class="layui-form-label">Linux</label>
+				    <div class="layui-input-block">
+				    	<input type="checkbox" data-column="0" class="toggle-vis" title="ID" lay-filter="linux"/>
+						<input type="checkbox" data-column="1" class="toggle-vis" title="HOST" lay-filter="linux"/>
+						<input type="checkbox" data-column="2" class="toggle-vis" title="备注" lay-filter="linux"/>
+						<input type="checkbox" data-column="3" class="toggle-vis" title="用户名" lay-filter="linux"/>
+						<input type="checkbox" data-column="4" class="toggle-vis" title="CPU核数" lay-filter="linux"/>
+						<input type="checkbox" data-column="5" class="toggle-vis" title="内存大小" lay-filter="linux"/>
+						<input type="checkbox" data-column="6" class="toggle-vis" title="磁盘空间-用户目录" lay-filter="linux"/>
+						<input type="checkbox" data-column="7" class="toggle-vis" title="磁盘空间-根目录" lay-filter="linux"/>
+						<input type="checkbox" data-column="8" class="toggle-vis" title="实时空闲CPU" lay-filter="linux"/>
+						<input type="checkbox" data-column="9" class="toggle-vis" title="实时空闲内存" lay-filter="linux"/>
+						<input type="checkbox" data-column="10" class="toggle-vis" title="TCP连接-ESTABLISHED" lay-filter="linux"/>
+						<input type="checkbox" data-column="11" class="toggle-vis" title="TCP连接-CLOSE_WAIT" lay-filter="linux"/>
+						<input type="checkbox" data-column="12" class="toggle-vis" title="TCP连接-TIME_WAIT" lay-filter="linux"/>
+						<input type="checkbox" data-column="13" class="toggle-vis" title="TCP连接-LISTEN" lay-filter="linux"/>
+						<input type="checkbox" data-column="14" class="toggle-vis" title="入网带宽流量" lay-filter="linux"/>
+						<input type="checkbox" data-column="15" class="toggle-vis" title="出网带宽流" lay-filter="linux"/>						
+						<input type="checkbox" data-column="16" class="toggle-vis" title="io等待" lay-filter="linux"/>
+						<input type="checkbox" data-column="17" class="toggle-vis" title="连接状态" lay-filter="linux"/>
+						<input type="checkbox" data-column="18" class="toggle-vis" title="操作" lay-filter="linux"/>
+				    </div>
+				    </div>
+					
+					<div class="layui-form-item" id="weblgic-columns">
+				    <label class="layui-form-label">Weblogic</label>
+				    <div class="layui-input-block">
+				    	<input type="checkbox" data-column="0" class="toggle-vis" title="ID" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="1" class="toggle-vis" title="HOST" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="2" class="toggle-vis" title="备注"  lay-filter="weblogic"/>
+						<input type="checkbox" data-column="3" class="toggle-vis" title="用户名" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="4" class="toggle-vis" title="节点名" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="5" class="toggle-vis" title="状态" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="6" class="toggle-vis" title="健康度" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="7" class="toggle-vis" title="启动时间" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="8" class="toggle-vis" title="JVM堆最大值" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="9" class="toggle-vis" title="JVM堆当前使用" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="10" class="toggle-vis" title="JVM堆当前空闲" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="11" class="toggle-vis" title="JVM堆空闲百分比" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="12" class="toggle-vis" title="活动线程总数" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="13" class="toggle-vis" title="暂挂用户数" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="14" class="toggle-vis" title="空闲线程数" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="15" class="toggle-vis" title="独占线程数" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="16" class="toggle-vis" title="吞吐量" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="17" class="toggle-vis" title="JDBC当前状态" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="18" class="toggle-vis" title="JDBC当前活动连接数" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="19" class="toggle-vis" title="JDBC当前可用连接数" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="20" class="toggle-vis" title="JDBC当前等待连接数" lay-filter="weblogic"/>	
+						<input type="checkbox" data-column="21" class="toggle-vis" title="JDBC历史最大连接数" lay-filter="weblogic"/>						  
+						<input type="checkbox" data-column="22" class="toggle-vis" title="连接状态" lay-filter="weblogic"/>
+						<input type="checkbox" data-column="23" class="toggle-vis" title="操作" lay-filter="weblogic"/>
+				    </div>
+				    </div>
+				    <div class="layui-form-item" id="tomcat-columns">
+				    <label class="layui-form-label">Tomcat</label>
+				    <div class="layui-input-block">
+
+				    </div>
+				    </div>
+				    <div class="layui-form-item" id="jvm-columns">
+				    <label class="layui-form-label">JVM</label>
+				    <div class="layui-input-block">
+						<input type="checkbox" data-column="0" class="toggle-vis" title="ID" lay-filter="jvm"/>
+						<input type="checkbox" data-column="1" class="toggle-vis" title="HOST" lay-filter="jvm"/>
+						<input type="checkbox" data-column="2" class="toggle-vis" title="备注" lay-filter="jvm"/>
+						<input type="checkbox" data-column="3" class="toggle-vis" title="用户名" lay-filter="jvm"/>
+						<input type="checkbox" data-column="4" class="toggle-vis" title="进程pid" lay-filter="jvm"/>
+						<input type="checkbox" data-column="5" class="toggle-vis" title="进程名" lay-filter="jvm"/>
+						<input type="checkbox" data-column="6" class="toggle-vis" title="Survivor_0" lay-filter="jvm"/>
+						<input type="checkbox" data-column="7" class="toggle-vis" title="Survivor_1" lay-filter="jvm"/>
+						<input type="checkbox" data-column="8" class="toggle-vis" title="Eden" lay-filter="jvm"/>
+						<input type="checkbox" data-column="9" class="toggle-vis" title="Old" lay-filter="jvm"/>
+						<input type="checkbox" data-column="10" class="toggle-vis" title="Perm" lay-filter="jvm"/>
+						<input type="checkbox" data-column="11" class="toggle-vis" title="YoungGCCount" lay-filter="jvm"/>
+						<input type="checkbox" data-column="12" class="toggle-vis" title="YoungGCTime" lay-filter="jvm"/>
+						<input type="checkbox" data-column="13" class="toggle-vis" title="FullGCCount" lay-filter="jvm"/>
+						<input type="checkbox" data-column="14" class="toggle-vis" title="FullGCTime" lay-filter="jvm"/>
+						<input type="checkbox" data-column="15" class="toggle-vis" title="GCTotalTime" lay-filter="jvm"/>
+						<input type="checkbox" data-column="16" class="toggle-vis" title="连接状态" lay-filter="jvm"/>
+						<input type="checkbox" data-column="17" class="toggle-vis" title="操作" lay-filter="jvm"/>
+				    </div>
+				    </div>
+				</div>
+				<!-- 预警设置 -->
+				<div id="alert-setting-value" class="layui-hide">
+					<div class="layui-tab layui-tab-brief">
+					  <ul class="layui-tab-title">
+					    <li class="layui-this">Linux</li>
+					    <li>Weblogic</li>
+					    <li>JVM</li>
+					  </ul>
+					  <div class="layui-tab-content">
+					    <div class="layui-tab-item layui-show">
+					    	<form class="layui-form layui-form-pane" action="">
+								<div class="layui-form-item">
+					    		<label class="layui-form-label">空闲CPU百分比[%]&nbsp;&lt;</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="freeCpu" required  lay-verify="required|number" placeholder="输入0-100整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item">
+					    		<label class="layui-form-label">空闲内存百分比[%]&nbsp;&lt;</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="freeMem" required  lay-verify="required|number" placeholder="输入0-100整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item">
+					    		<label class="layui-form-label">Tcp连接-TIME_WAIT数量&nbsp;&gt;</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="TIME_WAIT" required  lay-verify="required|number" placeholder="输入大于0整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item">
+					    		<label class="layui-form-label">Tcp连接-CLOSE_WAIT数量&nbsp;&gt;</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="CLOSE_WAIT" required  lay-verify="required|number" placeholder="输入大于0整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item">
+					    		<label class="layui-form-label">io等待CPU执行时间百分比[%]&nbsp;&gt;</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="ioWait" required  lay-verify="required|number" placeholder="输入0-100整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item">
+						      		<button class="layui-btn" lay-submit lay-filter="alert-setting-value" data-type="linux">更新</button>
+						  		</div>
+							</form>		    
+					    </div>
+					    <div class="layui-tab-item">
+					    	<form class="layui-form layui-form-pane" action="">
+								<div class="layui-form-item">
+					    		<label class="layui-form-label">JVM堆当前空闲百分比[%]&nbsp;&lt;</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="freePercent" required  lay-verify="required|number" placeholder="输入0-100整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>		  			
+					  			<div class="layui-form-item">
+					    		<label class="layui-form-label">暂挂用户请求数量&nbsp;&gt;</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="pendingCount" required  lay-verify="required|number" placeholder="输入大于0整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item">
+					    		<label class="layui-form-label">JDBC等待连接请求数&nbsp;&gt;</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="waitingForConnectionCurrentCount" required  lay-verify="required|number" placeholder="输入大于0整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item">
+						      		<button class="layui-btn" lay-submit lay-filter="alert-setting-value"  data-type="weblogic">更新</button>
+						  		</div>
+							</form>		    
+					    </div>
+					    <div class="layui-tab-item">
+					    	<form class="layui-form layui-form-pane" action="">
+								<div class="layui-form-item">
+					    		<label class="layui-form-label">Eden空间容量使用百分比[%]&nbsp;&gt;</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="edenSpacePercent" required  lay-verify="required|number" placeholder="输入0-100整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>		  			
+					  			<div class="layui-form-item">
+					    		<label class="layui-form-label">老生代空间容量使用百分比[%]&nbsp;&gt;</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="oldSpacePercent" required  lay-verify="required|number" placeholder="输入0-100整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item">
+					    		<label class="layui-form-label">持久代空间容量使用百分比[%]&nbsp;&gt;</label>
+					    		<div class="layui-input-block">
+					      			<input type="text" name="permSpacePercent" required  lay-verify="required|number" placeholder="输入0-100整数" autocomplete="off" class="layui-input">
+					    		</div>
+					  			</div>
+					  			<div class="layui-form-item">
+						      		<button class="layui-btn" lay-submit lay-filter="alert-setting-value"  data-type="jvm">更新</button>
+						  		</div>
+							</form>	
+					    </div>
+					  </div>
+					</div>		
+				</div>
+				<!-- 资源显示区域 -->              	          			
+    			<div class="layui-collapse">
+    				<!-- Linux start -->
+				  <div class="layui-colla-item" id="linux">
+				    <h2 class="layui-colla-title"><strong>Linux服务器</strong>&nbsp;&nbsp;&nbsp;<i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-colla-icon-refresh ">&#x1002;</i></h2>			    
+				    <div class="layui-colla-content layui-show">	
+				    	<button class="layui-btn layui-btn-small">命令控制台</button>				    						    	    	
+				    	<table class="layui-table" lay-skin="line row" >
+							<thead>
+								<tr>
+								  <th>#</th>
+								  <th>HOST</th>
+								  <th>备注</th>
+								  <th>用户名</th>
+								  <th>CPU核数</th>
+								  <th>内存大小</th>
+								  <th>磁盘空间<br>用户目录</th>
+								  <th>磁盘空间<br>根目录</th>
+								  <th>实时空闲<br>CPU</th>
+								  <th>实时空闲<br>内存</th>
+								  <th>TCP连接<br>ESTABLISHED</th>
+								  <th>TCP连接<br>CLOSE_WAIT</th>
+								  <th>TCP连接<br>TIME_WAIT</th>
+								  <th>TCP连接<br>LISTEN</th>
+								  <th>入网带宽</th>
+								  <th>出网带宽</th>
+								  <th>io等待</th>
+								  <th>连接状态</th>
+								  <th>操作</th>
+								</tr>
+							</thead>
+							<tbody>	
+								
+							</tbody>
+						</table>
+				    </div>
+				  </div>
+				  <!-- Linux end -->
+				  <!-- Weblogic start -->
+				  <div class="layui-colla-item" id="weblogic">
+				    <h2 class="layui-colla-title"><strong>Weblogic</strong>&nbsp;&nbsp;&nbsp;<i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-colla-icon-refresh ">&#x1002;</i></h2>
+				    <div class="layui-colla-content layui-show">				    	
+				    	<table class="layui-table" lay-skin="line row">
+							<thead>
+								<tr>
+								  <th>#</th>
+								  <th>HOST</th>
+								  <th>备注</th>
+								  <th>用户名</th>
+								  <th>节点名</th>
+								  <th>运行状态</th>
+								  <th>健康度</th>
+								  <th>启动时间</th>
+								  <th>JVM堆<br>最大值</th>
+								  <th>JVM堆<br>当前使用</th>
+								  <th>JVM堆<br>当前空闲</th>
+								  <th>JVM堆<br>空闲百分比</th>
+								  <th>活动线程总数</th>
+								  <th>暂挂用户数</th>
+								  <th>空闲线程数</th>
+								  <th>独占线程数</th>
+								  <th>吞吐量</th>
+								  <th>JDBC当前<br>状态</th>
+								  <th>JDBC当前<br>活动连接数</th>
+								  <th>JDBC当前<br>可用连接数</th>
+								  <th>JDBC当前<br>等待连接数</th>
+								  <th>JDBC历史<br>最大连接数</th>
+								  <th>连接状态</th>
+								  <th>操作</th>
+								</tr>
+							</thead>
+							<tbody>	 
+								
+							</tbody>
+						</table>
+				    </div>
+				  </div>
+				  <!-- Weblogic end -->
+				  <!-- Tomcat start -->
+				  <!-- <div class="layui-colla-item" id="tomcat">
+				    <h2 class="layui-colla-title"><strong>Tomcat</strong>&nbsp;&nbsp;&nbsp;<i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-colla-icon-refresh ">&#x1002;</i></h2>
+				    <div class="layui-colla-content layui-show" >
+				    	<table class="layui-table" lay-skin="line row">
+							<thead>
+								<tr>
+																	 
+								</tr>
+							</thead>
+							<tbody>	  
+							</tbody>
+						</table>
+				    </div>
+				  </div> -->
+				  <!-- Tomcat end -->
+				  <!-- JVM start -->
+				  <div class="layui-colla-item" id="jvm">
+				    <h2 class="layui-colla-title"><strong>JVM</strong>&nbsp;&nbsp;&nbsp;<i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-colla-icon-refresh ">&#x1002;</i></h2>
+				    <div class="layui-colla-content layui-show">				    	
+				    	<table class="layui-table" lay-skin="line row">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>HOST</th>
+									<th>备注</th>
+									<th>用户名</th>
+									<th>进程pid</th>
+									<th>进程名</th>
+									<th>Survivor_0</th>
+									<th>Survivor_1</th>
+									<th>Eden</th>
+									<th>Old</th>
+									<th>Perm</th>									
+									<th>YoungGCCount</th>
+									<th>YoungGCTime</th>
+									<th>FullGCCount</th>
+									<th>FullGCTime</th>
+									<th>GCTotalTime</th>
+									<th>连接状态</th>
+									<th>操作</th>								  
+								</tr>
+							</thead>
+							<tbody>	  
+							</tbody>
+						</table>
+				    </div>
+				  </div>
+				  <!-- JVM end -->
+				</div>
+    		</div>
+    	</div>
+    </div>
+	<!-- 底部 -->
+    <footer class="blog-footer">
+        <p><span>Copyright</span><span>&copy;</span><span>2017</span><a href="#">神州数码性能测试团队</a><span>Design By Baikapala</span></p>
+        <p>前端框架支持&nbsp;<a href="http://www.layui.com" target="_blank">layui</a></p>
+    </footer>
+    <!--侧边导航-->
+    <ul class="layui-nav layui-nav-tree layui-nav-side blog-nav-left layui-hide" lay-filter="nav">
+        <li class="layui-nav-item layui-this">
+             <a href="#"><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
+         </li>
+         <li class="layui-nav-item">
+             <a href="server.html" target="_blank"><i class="fa fa-globe fa-fw"></i>&nbsp;服务器</a>
+         </li>
+         <li class="layui-nav-item">
+             <a href="report.html" target="_blank"><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
+         </li>
+         <li class="layui-nav-item">
+             <a href="http://152.55.229.41:8169/commonInfo.html" target="_blank"><i class="fa fa-briefcase fa-fw"></i>&nbsp;资料</a>
+         </li>
+         <li class="layui-nav-item">
+             <a href="about.html" target="_blank"><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
+         </li>
+    </ul>
+    <!--遮罩-->
+    <div class="blog-mask animated layui-hide"></div>
+    
+    <!-- utilPage -->
+    <div id="utilPage" class="layui-hide">
+    	<div class="layui-form util-page">
+	   	<div class="layui-form-item">
+	   	<select name="typeName">
+	     	<option value="all" selected>全部类型</option>
+	        <option value="linux">Linux图表</option>
+	        <option value="weblogic">Weblogic图表</option>
+	        <option value="tomcat">Tomcat图表</option>
+	        <option value="jvm">JVM图表</option>
+	   	</select>		
+		</div>
+		<div class="util-page-btn">
+			<button type="button" class="layui-btn layui-btn-normal layui-btn-small" >删除全部</button>&nbsp;&nbsp;
+			<button type="button" class="layui-btn layui-btn-normal layui-btn-small" >重新计时</button>&nbsp;&nbsp;			
+			<button type="button" class="layui-btn layui-btn-normal layui-btn-small" >停止刷新</button>&nbsp;&nbsp;
+			<button type="button" class="layui-btn layui-btn-normal layui-btn-small">开始刷新</button>&nbsp;&nbsp;
+			<button type="button" class="layui-btn layui-btn-normal layui-btn-small">导出数据</button>&nbsp;&nbsp;			
+		</div>
+		<div class="util-page-tips">
+			
+		</div>
+		</div>
+	</div>
+	
+	<!-- jvmMonitorStartHtml -->
+	<div id="jvmMonitorStartPage" class="layui-hide">
+		<form class="layui-form layui-form-pane" action="">
+				<div class="layui-form-item">
+				    <label class="layui-form-label">JAVA_HOME_BIN</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="javaHome" id="javaHome" placeholder="指定java_home的bin路径" autocomplete="off" class="layui-input">
+				    </div>
+			  	</div>
+			  	<div class="layui-form-item">
+				    <label class="layui-form-label">JAVA_PROCESS_PID</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="pid" id="pid" placeholder="指定一个需要监控的java进程的pid" autocomplete="off" class="layui-input">
+				    </div>
+			  	</div>
+			  	<div class="layui-form-item">
+				    <label class="layui-form-label">PROCESS_NAME</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="processName" id="processName" placeholder="指定该进程的说明名称方便区分" autocomplete="off" class="layui-input">
+				    </div>
+			  	</div>
+			  	<div class="layui-form-item layui-form-text">
+			      <textarea id="processNames" class="layui-textarea" rows="6"></textarea>
+			 	</div>
+			 	<input type="hidden" id="jvm-serverId"/>
+			 	<div class="layui-form-item">
+			      <input type="button" class="layui-btn layui-btn-normal" id="checkJps" value="检查java进程列表"/>
+			      <input type="button" class="layui-btn layui-btn-warning" id="startJvmMonitor" value="启动jvm监控"/>
+			  </div>
+			</form>
+	</div>
+	<!-- exec-command -->
+	<div id="exec-command-container" class="layui-hide">
+		<div class="layui-form layui-form-pane">
+		<div id="command-server-list">
+			<div class="layui-form-item">
+			    <label class="layui-form-label">主机</label>
+			    <div class="layui-input-block">
+			      <select id="serverId" lay-filter="select-linux-server">
+			        <option value="">请选择一个主机</option>
+			      </select>
+			    </div>
+			  </div>
+		</div>
+		<div id="exec-command-util">
+			<div class="layui-form-item">
+ 
+			  <div class="layui-inline">
+			    <label class="layui-form-label">执行命令</label>
+			    <div class="layui-input-inline" style="width: 300px;">
+			      <input type="text" name="command" id="command" placeholder="输入非交互性命令" autocomplete="off" class="layui-input">
+			    </div>
+			  </div>
+			  
+			   <input type="button" class="layui-btn layui-btn-normal" value="执行">&nbsp;
+			   <input type="button" class="layui-btn layui-btn-danger" value="中断">
+			  
+			</div>  			  			  
+		</div>
+		<div id="exec-return-info">
+			<div class="layui-form-item layui-form-text">
+			    <label class="layui-form-label">执行结果</label>
+			    <div class="layui-input-block">
+			      <textarea id="returnInfo" class="layui-textarea" style="height: 250px;" readonly="readonly" ></textarea>
+			    </div>
+			  </div>
+		</div>
+		<div id="exec-command-tips">
+		
+		</div>
+		</div>
+	</div>	
+	<!-- alert-data-table -->
+	<script id="alert-info-table" type="text/html">
+		<button id="refresh-alert-table" class="layui-btn layui-btn-small" style="margin:6px 30px 6px 0px;float:right;"><i class="layui-icon">&#x1002;</i></button>
+		<table class="layui-table" lay-skin="line row" style="margin:2px 20px 20px 20px;width:750px;">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>HOST</th>
+				<th>类型</th>
+				<th>类目</th>
+				<th>当前值</th>
+				<th>预警值</th>							  
+			</tr>
+		</thead>
+		<tbody>	
+			{{#  $.each(d, function(serverId, info){ }}
+			{{#  $.each(info, function(item, itemValue) { }}
+			{{#  if ((typeof itemValue) == 'object') { }}
+			<tr>
+			<td>{{ serverId }}</td>
+			<td>{{ info.host }}</td>
+			<td><span class="label label-success">{{ info.serverType }}</span></td>
+			<td>{{ itemValue.itemMark }}</td>
+			<td style="color:#FF5722;"><strong>{{ itemValue.currentValue }}</strong></td>
+			<td>{{ itemValue.alertValue }}</td>
+			</tr>
+			{{#  } }}
+			{{#  }); }}
+			{{#  }); }} 
+		</tbody>
+		</table>
+	</script>	
+	
+	<!-- userKey show page -->
+	<script id="show-userKey-table" type="text/html">
+	<button id="add-new-userKey" class="layui-btn layui-btn-small" style="margin:6px 30px 6px 0px;float:right;">新增userKey</button>
+	<table class="layui-table" lay-skin="line row" style="margin:2px 20px 20px 20px;width:750px;">
+		<thead>
+			<tr>
+				<th>userKey</th>
+				<th>当前监控的场景服务器数量</th>
+				<th>创建时间</th>
+				<th>操作</th>						  
+			</tr>
+		</thead>
+		<tbody>	
+			{{#  $.each(d, function(i, userSpace){ }}					
+			<tr>
+			<td>{{ userSpace[0] }}</td>
+			<td>{{ userSpace[1] }}</td>
+			<td>{{ userSpace[2] }}</td>
+			{{# if (userSpace[0] == userKey) { }}
+			<td><span class="label label-success">当前使用</span></td>
+			{{# } else {}}
+			<td><button class="layui-btn layui-btn-danger layui-btn-small change-userKey" id="{{ userSpace[0] }}">切换</button></td>
+			{{# } }}
+			</tr>			
+			{{#  }); }} 
+		</tbody>
+		</table>
+	</script>
+		
+<script src="libs/jquery.js"></script>
+<script src="libs/layui/layui.js"></script>
+<script src="libs/datatables/js/jquery.dataTables.min.js"></script>
+<script src="libs/Echarts/echarts.min.js"></script>
+<script src="libs/Echarts/shine.js"></script>
+<script src="js/global.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>
