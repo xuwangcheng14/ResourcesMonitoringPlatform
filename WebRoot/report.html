@@ -1,5 +1,368 @@
-<a href="./infos/RMPUtil.rar">��������չʾ����</a>
-<br>
-<strong>ʹ�÷�����</strong><br>
-�ڿ���̨ҳ��ͨ�����½ǹ�����ʹ��  ���ݵ���  ���ܵ�����ǰʱ���ڵ����ݣ��Ҽ�����Ϊ���浽���أ�
-��ѹRMPUtil.rar����index.htmlѡ��ָ����json�ļ����ɲ鿴��������.
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>报表数据-神州数码性能测试资源监控平台</title>
+    <link rel="stylesheet" href="libs/layui/css/layui.css">
+    <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="libs/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+<nav class="blog-nav layui-header">
+        <a class="blog-logo" href="index">资源监控中心</a>
+        <!-- 导航菜单 -->
+        <ul class="layui-nav" lay-filter="nav">
+            <li class="layui-nav-item">
+                <a href="index.html" target="_blank"><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="server.html" target="_blank"><i class="fa fa-globe fa-fw"></i>&nbsp;服务器</a>
+            </li>
+            <li class="layui-nav-item layui-this">
+                <a href="#"><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="http://152.55.229.41:8169/commonInfo.html" target="_blank"><i class="fa fa-briefcase fa-fw"></i>&nbsp;资料</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="about.html" target="_blank"><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
+            </li>
+        </ul>
+        <!-- 手机和平板的导航开关 -->
+        <a class="blog-navicon" href="javascript:;">
+            <i class="fa fa-navicon"></i>
+        </a>
+</nav>
+<div class="blog-body">
+    <div class="blog-container">
+        <div class="blog-main">
+            <div class="dcits-table-setting">
+                <button class="layui-btn layui-btn-normal layui-btn-small" show-type="columns">信息列显示</button>
+                <button class="layui-btn layui-btn-normal layui-btn-small" show-type="views">视图显示</button>&nbsp;&nbsp;&nbsp;
+                <span style="margin-right:15px;">
+                	<button class="layui-btn layui-btn-small" onclick="window.open('./report1.html')">离线工具下载</button>
+					<button class="layui-btn layui-btn-small" id="to-analyze-data">数据分析</button>              
+                </span>
+                <input type="file" name="infosData" id="infosData" onchange="handleFiles(this.files)">
+            </div>
+            <!-- 视图显示设置 -->
+            <div class="layui-form layui-hide" id="views">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">视图设置</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" data-column="linux" title="Linux" lay-filter="view" checked/>
+                        <input type="checkbox" data-column="weblogic" title="Weblogic" lay-filter="view" checked/>
+                        <input type="checkbox" data-column="jvm" title="JVM" lay-filter="view" checked/>
+                    </div>
+                </div>
+            </div>
+            <!-- 列显示设置 -->
+            <div class="layui-form layui-hide" id="columns">
+                <div class="layui-form-item" id="linux-columns">
+                    <label class="layui-form-label">Linux</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" data-column="0" class="toggle-vis" title="ID" lay-filter="linux"/>
+                        <input type="checkbox" data-column="1" class="toggle-vis" title="HOST" lay-filter="linux"/>
+                        <input type="checkbox" data-column="2" class="toggle-vis" title="备注" lay-filter="linux"/>
+                        <input type="checkbox" data-column="3" class="toggle-vis" title="用户名" lay-filter="linux"/>
+                        <input type="checkbox" data-column="4" class="toggle-vis" title="CPU核数" lay-filter="linux"/>
+                        <input type="checkbox" data-column="5" class="toggle-vis" title="内存大小" lay-filter="linux"/>
+                        <input type="checkbox" data-column="6" class="toggle-vis" title="磁盘空间-用户目录" lay-filter="linux"/>
+                        <input type="checkbox" data-column="7" class="toggle-vis" title="磁盘空间-根目录" lay-filter="linux"/>
+                        <input type="checkbox" data-column="8" class="toggle-vis" title="实时空闲CPU" lay-filter="linux"/>
+                        <input type="checkbox" data-column="9" class="toggle-vis" title="实时空闲内存" lay-filter="linux"/>
+                        <input type="checkbox" data-column="10" class="toggle-vis" title="TCP连接-ESTABLISHED" lay-filter="linux"/>
+                        <input type="checkbox" data-column="11" class="toggle-vis" title="TCP连接-CLOSE_WAIT" lay-filter="linux"/>
+                        <input type="checkbox" data-column="12" class="toggle-vis" title="TCP连接-TIME_WAIT" lay-filter="linux"/>
+                        <input type="checkbox" data-column="13" class="toggle-vis" title="TCP连接-LISTEN" lay-filter="linux"/>
+                        <input type="checkbox" data-column="14" class="toggle-vis" title="入网带宽流量" lay-filter="linux"/>
+                        <input type="checkbox" data-column="15" class="toggle-vis" title="出网带宽流" lay-filter="linux"/>
+                        <input type="checkbox" data-column="16" class="toggle-vis" title="io等待" lay-filter="linux"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" id="weblgic-columns">
+                    <label class="layui-form-label">Weblogic</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" data-column="0" class="toggle-vis" title="ID" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="1" class="toggle-vis" title="HOST" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="2" class="toggle-vis" title="备注"  lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="3" class="toggle-vis" title="用户名" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="4" class="toggle-vis" title="节点名" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="5" class="toggle-vis" title="状态" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="6" class="toggle-vis" title="健康度" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="7" class="toggle-vis" title="启动时间" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="8" class="toggle-vis" title="JVM堆最大值" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="9" class="toggle-vis" title="JVM堆当前使用" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="10" class="toggle-vis" title="JVM堆当前空闲" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="11" class="toggle-vis" title="JVM堆空闲百分比" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="12" class="toggle-vis" title="活动线程总数" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="13" class="toggle-vis" title="暂挂用户数" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="14" class="toggle-vis" title="空闲线程数" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="15" class="toggle-vis" title="独占线程数" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="16" class="toggle-vis" title="吞吐量" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="17" class="toggle-vis" title="JDBC当前状态" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="18" class="toggle-vis" title="JDBC当前活动连接数" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="19" class="toggle-vis" title="JDBC当前可用连接数" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="20" class="toggle-vis" title="JDBC当前等待连接数" lay-filter="weblogic"/>
+                        <input type="checkbox" data-column="21" class="toggle-vis" title="JDBC历史最大连接数" lay-filter="weblogic"/>
+                    </div>
+                </div>
+                <div class="layui-form-item" id="tomcat-columns">
+                    <label class="layui-form-label">Tomcat</label>
+                    <div class="layui-input-block">
+
+                    </div>
+                </div>
+                <div class="layui-form-item" id="jvm-columns">
+                    <label class="layui-form-label">JVM</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" data-column="0" class="toggle-vis" title="ID" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="1" class="toggle-vis" title="HOST" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="2" class="toggle-vis" title="备注" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="3" class="toggle-vis" title="用户名" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="4" class="toggle-vis" title="进程pid" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="5" class="toggle-vis" title="进程名" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="6" class="toggle-vis" title="Survivor_0" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="7" class="toggle-vis" title="Survivor_1" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="8" class="toggle-vis" title="Eden" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="9" class="toggle-vis" title="Old" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="10" class="toggle-vis" title="Perm" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="11" class="toggle-vis" title="YoungGCCount" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="12" class="toggle-vis" title="YoungGCTime" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="13" class="toggle-vis" title="FullGCCount" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="14" class="toggle-vis" title="FullGCTime" lay-filter="jvm"/>
+                        <input type="checkbox" data-column="15" class="toggle-vis" title="GCTotalTime" lay-filter="jvm"/>
+                    </div>
+                </div>
+            </div>
+            <!-- 资源显示区域 -->
+            <div class="layui-collapse">
+                <!-- Linux start -->
+                <div class="layui-colla-item" id="linux">
+                    <h2 class="layui-colla-title"><strong>Linux服务器</strong></h2>
+                    <div class="layui-colla-content layui-show">
+                        <table class="layui-table" lay-skin="line row" >
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>HOST</th>
+                                <th>备注</th>
+                                <th>用户名</th>
+                                <th>CPU核数</th>
+                                <th>内存大小</th>
+                                <th>磁盘空间<br>用户目录</th>
+                                <th>磁盘空间<br>根目录</th>
+                                <th>实时空闲<br>CPU</th>
+                                <th>实时空闲<br>内存</th>
+                                <th>TCP连接<br>ESTABLISHED</th>
+                                <th>TCP连接<br>CLOSE_WAIT</th>
+                                <th>TCP连接<br>TIME_WAIT</th>
+                                <th>TCP连接<br>LISTEN</th>
+                                <th>入网带宽</th>
+                                <th>出网带宽</th>
+                                <th>io等待</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Linux end -->
+                <!-- Weblogic start -->
+                <div class="layui-colla-item" id="weblogic">
+                    <h2 class="layui-colla-title"><strong>Weblogic</strong></h2>
+                    <div class="layui-colla-content layui-show">
+                        <table class="layui-table" lay-skin="line row">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>HOST</th>
+                                <th>备注</th>
+                                <th>用户名</th>
+                                <th>节点名</th>
+                                <th>运行状态</th>
+                                <th>健康度</th>
+                                <th>启动时间</th>
+                                <th>JVM堆<br>最大值</th>
+                                <th>JVM堆<br>当前使用</th>
+                                <th>JVM堆<br>当前空闲</th>
+                                <th>JVM堆<br>空闲百分比</th>
+                                <th>活动线程总数</th>
+                                <th>暂挂用户数</th>
+                                <th>空闲线程数</th>
+                                <th>独占线程数</th>
+                                <th>吞吐量</th>
+                                <th>JDBC当前<br>状态</th>
+                                <th>JDBC当前<br>活动连接数</th>
+                                <th>JDBC当前<br>可用连接数</th>
+                                <th>JDBC当前<br>等待连接数</th>
+                                <th>JDBC历史<br>最大连接数</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Weblogic end -->
+                <!-- JVM start -->
+                <div class="layui-colla-item" id="jvm">
+                    <h2 class="layui-colla-title"><strong>JVM</strong></h2>
+                    <div class="layui-colla-content layui-show">
+                        <table class="layui-table" lay-skin="line row">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>HOST</th>
+                                <th>备注</th>
+                                <th>用户名</th>
+                                <th>进程pid</th>
+                                <th>进程名</th>
+                                <th>Survivor_0</th>
+                                <th>Survivor_1</th>
+                                <th>Eden</th>
+                                <th>Old</th>
+                                <th>Perm</th>
+                                <th>YoungGCCount</th>
+                                <th>YoungGCTime</th>
+                                <th>FullGCCount</th>
+                                <th>FullGCTime</th>
+                                <th>GCTotalTime</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- JVM end -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 底部 -->
+<footer class="blog-footer">
+    <p><span>Copyright</span><span>&copy;</span><span>2017</span><a href="#">神州数码性能测试团队</a><span>Design By Baikapala</span></p>
+    <p>前端框架支持&nbsp;<a href="http://www.layui.com" target="_blank">layui</a></p>
+</footer>
+<!--侧边导航-->
+ <ul class="layui-nav layui-nav-tree layui-nav-side blog-nav-left layui-hide" lay-filter="nav">
+     <li class="layui-nav-item">
+          <a href="index.html" target="_blank"><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
+      </li>
+      <li class="layui-nav-item">
+          <a href="server.html" target="_blank"><i class="fa fa-globe fa-fw"></i>&nbsp;服务器</a>
+      </li>
+      <li class="layui-nav-item layui-this">
+          <a href="#"><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
+      </li>
+      <li class="layui-nav-item">
+          <a href="http://152.55.229.41:8169/commonInfo.html" target="_blank"><i class="fa fa-briefcase fa-fw"></i>&nbsp;资料</a>
+      </li>
+      <li class="layui-nav-item">
+          <a href="about.html" target="_blank"><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
+      </li>
+ </ul>
+ <!--遮罩-->
+ <div class="blog-mask animated layui-hide"></div>
+ 
+ 
+ <!-- choose analyze data -->
+<script id="choose-analyze-data" type="text/html">
+<div style="margin:12px;"><button class="layui-btn layui-btn-normal layui-btn-small" id="send-analyze-request">发送分析请求</button></div>
+<div class="layui-collapse" style="margin:12px;">	
+  	{{# $.each(d.serverList, function(serverType, thisServerList) { }}
+  	<div class="layui-colla-item">
+    <h2 class="layui-colla-title">{{ serverType }}服务器列表</h2>
+    <div class="layui-colla-content">
+    	<div class="layui-form" id="">
+    		<div class="layui-form-item" id="">
+			    <label class="layui-form-label">选择要分析的服务器</label>
+			    <div class="layui-input-block">
+			    	<input type="checkbox" title="全选" lay-filter="all-checked"> 
+					{{# $.each(thisServerList, function(i, n) { }}
+					{{# var host = n.host + ":" + n.port; }}
+					{{# if (serverType == "jvm") { host = n.host + "-" + n.processName + "[" + n.pid + "]" } }}
+						<input type="checkbox" title="{{ host }}" data-id="{{ n.id }}" class="analyze-data-server" data-type="{{ serverType }}">
+					{{# }); }}			    
+			    </div>
+			</div>
+			<div class="layui-form-item" id="">
+			    <label class="layui-form-label">选择要分析的类目</label>
+			    <div class="layui-input-block">
+			    	<input type="checkbox" title="全选" lay-filter="all-checked"> 
+					{{# $.each(d["propertyObject"][serverType], function(itemName1, mark1) { }}
+					{{# $.each(mark1, function(itemName2, mark2) { var itemName = itemName1 + "." + itemName2;var mark = consts[serverType][itemName2];}}
+						<input type="checkbox" title="{{ mark }}" data-value="{{ itemName }}" class="analyze-data-item" data-type="{{ serverType }}">
+					{{# });}}
+					{{# }); }}			    
+			    </div>
+			</div>			
+		</div>		
+    </div>
+  	</div>
+  	{{# }); }}
+</div>
+</script>
+
+<!-- analyze-result-table -->
+<script id="analyze-result-table" type="text/html">
+	<table class="layui-table" style="margin:18px;">
+	  <thead>
+	    <tr>
+	      <th rowspan="2">HOST</th>
+	      <th rowspan="2">开始时间</th>
+	      <th rowspan="2">结束时间</th>
+		  <th rowspan="2">类型</th>
+		  {{# var count = 0;}}
+	      {{# $.each(d.data, function(i, info) { }}
+	      {{# if (info.serverType == d.type) { }}
+		  {{# $.each(info.items, function(i, item) { }}
+		  {{# count++;var markName = consts[d.type][(item.itemName).split('.')[1]];}}
+	      	<th colspan="3">{{ markName }}</th>
+	      {{# }); }} 
+		  {{# return false;} }}
+	      {{# }); }}	          
+	    </tr> 
+	    <tr>
+	    	{{# for(var m = 0;m < count;m++) { }}
+	    	<th>最大值</th>
+	    	<th>最小值</th>
+	    	<th>平均值</th>
+	    	{{# } }}		
+	    </tr>
+	  </thead>
+	  <tbody>
+	  	{{# $.each(d.data, function(i, info) { }}
+	  	{{# if(info.serverType == d.type) { }}
+	    <tr>      
+	      <td>{{ info.host }}</td>
+	      <td>{{ info.beginTime }}</td>
+	      <td>{{ info.endTime }}</td>
+		  <td>{{ info.serverType }}</td>
+	      {{# $.each(info.items, function(i1, values) { }}
+	      <td>{{ values.maxValue }}</td>
+	      <td>{{ values.minValue }}</td>
+	      <td>{{ values.avgValue }}</td>
+	      {{# }); }} 
+	    </tr>
+	    {{# } }}
+	    {{# }); }} 
+	  </tbody>
+	</table>
+</script>
+<script src="libs/jquery.js"></script>
+<script src="libs/layui/layui.js"></script>
+<script src="libs/datatables/js/jquery.dataTables.min.js"></script>
+<script src="libs/Echarts/echarts.min.js"></script>
+<script src="libs/Echarts/shine.js"></script>
+<script src="js/report.js"></script>
+</body>
+</html>

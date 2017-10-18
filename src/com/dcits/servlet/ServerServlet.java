@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import xuwangcheng.love.w.servlet.AbstractHttpServlet;
 import xuwangcheng.love.w.servlet.annotation.ExecuteRequest;
@@ -28,7 +29,10 @@ import xuwangcheng.love.w.util.Constants;
 import com.dcits.bean.LinuxInfo;
 import com.dcits.bean.ServerInfo;
 import com.dcits.bean.WeblogicInfo;
+import com.dcits.bean.util.AnalyzeData;
+import com.dcits.bean.util.LeaveMessage;
 import com.dcits.bean.util.UserSpace;
+import com.dcits.dao.LeaveMessageDao;
 import com.dcits.dao.ServerDao;
 import com.dcits.util.DcitsUtil;
 import com.dcits.util.ServletUtil;
@@ -47,6 +51,16 @@ public class ServerServlet extends AbstractHttpServlet {
 	
 	@InjectDao
 	private ServerDao serverDao;
+	@InjectDao
+	private LeaveMessageDao leaveMessageDao;
+	
+	public void setLeaveMessageDao(LeaveMessageDao leaveMessageDao) {
+		this.leaveMessageDao = leaveMessageDao;
+	}
+	
+	public LeaveMessageDao getLeaveMessageDao() {
+		return leaveMessageDao;
+	}
 	
 	public void setServerDao(ServerDao serverDao) {
 		this.serverDao = serverDao;
@@ -54,6 +68,68 @@ public class ServerServlet extends AbstractHttpServlet {
 	
 	public ServerDao getServerDao() {
 		return serverDao;
+	}
+	
+	/**
+	 * 留言列表
+	 * @param ajaxData
+	 * @param request
+	 */
+	@ExecuteRequest
+	public void listMsg(Map<String, Object> ajaxData, HttpServletRequest request) {
+		List<LeaveMessage>  msgs = new ArrayList<LeaveMessage>();
+		try {
+			msgs = leaveMessageDao.list();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		ajaxData.put("returnCode", Constants.CORRECT_RETURN_CODE);
+		ajaxData.put("data", msgs);
+	}
+	
+	/**
+	 * 报错留言
+	 * @param ajaxData
+	 * @param request
+	 * @param userKey
+	 * @param content
+	 */
+	@ExecuteRequest
+	public void saveMsg(Map<String, Object> ajaxData, HttpServletRequest request, @RequestBody("userKey")String userKey
+				, @RequestBody("content")String content) {
+		if (StringUtils.isEmpty(userKey)) {
+			userKey = "游客";
+		}
+		
+		LeaveMessage msg = new LeaveMessage(userKey, content, DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN));
+		
+		try {
+			leaveMessageDao.saveMessage(msg);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			ajaxData.put("msg", "保存数据库出错:" + e.getMessage());
+			return;
+		}
+		
+		ajaxData.put("message", msg);
+		ajaxData.put("returnCode", Constants.CORRECT_RETURN_CODE);
+	}
+	
+	
+	@ExecuteRequest
+	public void delAllMsg(Map<String, Object> ajaxData, HttpServletRequest request) {
+		int ret = 0;
+		try {
+			ret = leaveMessageDao.delAll();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		ajaxData.put("count", ret);
+		ajaxData.put("returnCode", Constants.CORRECT_RETURN_CODE);
 	}
 	
 	/**
@@ -196,6 +272,71 @@ public class ServerServlet extends AbstractHttpServlet {
 		ajaxData.put("returnCode", Constants.CORRECT_RETURN_CODE);
 		ajaxData.put("data", infos);
 	}
+	
+	
+	@SuppressWarnings({ "unused", "unchecked" })
+	@ExecuteRequest
+	public void analyzeData(Map<String, Object> ajaxData, HttpServletRequest request) {
+		String body = "";
+		
+		try {
+			body = URLDecoder.decode(ServletUtil.getBody(request), "UTF-8").replaceAll("=", ":").replaceAll("&", ",");//
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		Map maps = null;
+		try {
+			maps = new ObjectMapper().readValue("{" + body.replace("analyzeServerList", "\"analyzeServerList\"")
+						.replace("analyzeItems", "\"analyzeItems\"").replace("serverInfos", "\"serverInfos\"")
+						.replace("dates", "\"dates\"") + "}", Map.class);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			ajaxData.put("msg", "解析json出错:" + e.getMessage());
+			return;		
+		}
+		
+		List<AnalyzeData> analyzeDatas = new ArrayList<AnalyzeData>();
+		Map<String, List<String>> itemInfos = (Map<String, List<String>>) maps.get("analyzeItems");
+		Map<String, List<String>> dates = (Map<String, List<String>>) maps.get("dates");
+		Map<String, Map<String, Object>> datas = (Map<String, Map<String, Object>>) maps.get("serverInfos");
+		
+		int linuxCount = 0;
+		int jvmCount = 0;
+		int weblogicCount = 0;
+		
+		for (Map<String, Object> serverInfo:(List<Map<String, Object>>)maps.get("analyzeServerList")) {
+			AnalyzeData ad = new AnalyzeData();
+			ad.setRuleItemStr(serverInfo);
+			ad.analyzeData(itemInfos, datas, dates);
+			
+			switch (ad.getServerType()) {
+			case "linux":
+				linuxCount++;
+				break;
+			case "jvm":
+				jvmCount++;
+				break;
+			case "weblogic":
+				weblogicCount++;
+				break;
+			default:
+				break;
+			}
+			
+			analyzeDatas.add(ad);
+		}
+		
+		
+		ajaxData.put("linuxCount",linuxCount);
+		ajaxData.put("jvmCount",jvmCount);
+		ajaxData.put("weblogicCount",weblogicCount);
+		ajaxData.put("result", analyzeDatas);
+		ajaxData.put("returnCode", Constants.CORRECT_RETURN_CODE);
+	}
+	
 	
 	/**
 	 * 更新或者添加信息

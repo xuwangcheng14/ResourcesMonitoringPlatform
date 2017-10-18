@@ -30,19 +30,23 @@ public class GetJvmInfo {
 			str = str.trim();
 			String[] infos = ((str.split("\\n")[1]).trim()).split("\\s+");
 			JvmRealTimeInfo realTimeInfo = info.getJvmInfo();
-			if (infos.length == 10) {
+			if (infos.length == 10 || infos.length == 11) { //不同版本的jdk打印的内容不一样， JDK1.8  11列  JDK1.7 10列 M替代P
 				realTimeInfo.setSurvivorSpacePercent_0(infos[0]);
 				realTimeInfo.setSurvivorSpacePercent_1(infos[1]);
 				realTimeInfo.setEdenSpacePercent(infos[2]);
 				realTimeInfo.setOldSpacePercent(infos[3]);
-				realTimeInfo.setPermSpacePercent(infos[4]);
-				realTimeInfo.setYoungGCTotalCount(infos[5]);
-				realTimeInfo.setYoungGCTime(infos[6]);
-				realTimeInfo.setFullGCTotalCount(infos[7]);
-				realTimeInfo.setFullGCTime(infos[8]);
-				realTimeInfo.setGCTotalTime(infos[9]);
+				
+				realTimeInfo.setPermSpacePercent(infos[4]); //JDK1.8为Metaspace  JDK1.7为PermGen
+				
+				int m = infos.length == 10 ? 4 : 5;
+				
+				realTimeInfo.setYoungGCTotalCount(infos[++m]);
+				realTimeInfo.setYoungGCTime(infos[++m]);
+				realTimeInfo.setFullGCTotalCount(infos[++m]);
+				realTimeInfo.setFullGCTime(infos[++m]);
+				realTimeInfo.setGCTotalTime(infos[++m]);
 				realTimeInfo.setTime(DcitsUtil.getCurrentTime(DcitsUtil.DEFAULT_DATE_PATTERN));
-			} 			
+			} 
 		} else {
 			info.setConnectStatus("获取该Java进程信息出错！");
 		}

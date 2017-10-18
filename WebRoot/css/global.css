@@ -321,7 +321,86 @@ body {
             padding-left: 7px;
         }
     
-    
+/*评论与留言*/
+.blog-comment {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+    .blog-comment li {
+        border-bottom: 1px dotted #01AAED;
+        padding: 15px 0 10px 0;
+    }
+
+    .blog-comment .content,
+    .blog-comment .info,
+    .blog-comment .replycontainer {
+        margin-left: 53px;
+    }
+
+    .blog-comment .info-footer {
+        font-size: 13px;
+    }
+
+    .blog-comment .info,
+    .blog-comment .replycontainer {
+        padding-top: 5px;
+    }
+
+        .blog-comment .replycontainer .layui-form-item {
+            margin-bottom: 5px;
+        }
+
+        .blog-comment .info span {
+            padding-right: 5px;
+        }
+
+        .blog-comment .info .username {
+            color: #01AAED;
+        }
+
+        .blog-comment .info .btn-reply {
+            color: #009688;
+        }
+
+    .blog-comment .content {
+        padding: 2px 0 5px 0;
+        min-height: 30px;
+        font-size: 13px;
+    }
+
+    .blog-comment hr {
+        margin-left: 53px;
+    }
+
+.comment-parent > img {
+    width: 45px;
+    height: 45px;
+    margin: 5px 5px 5px 0;
+    position: absolute;
+    border-radius: 50px;
+}
+
+.comment-child img {
+    width: 40px;
+    height: 40px;
+    margin: 5px 5px 5px 0;
+    position: absolute;
+    border-radius: 50px;
+}
+
+.comment-child {
+    margin-left: 53px;
+    min-height: 50px;
+}
+
+    .comment-child .info {
+        margin-left: 48px;
+        font-size: 12px;
+        line-height: 20px;
+    }
+/*评论与留言END*/
+   
 /*表格单元格内容居中*/    
 .layui-table td {
 	text-align: center;

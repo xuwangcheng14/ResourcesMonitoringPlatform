@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>关于平台-神州数码性能测试资源监控平台</title>
+    <link rel="stylesheet" href="libs/layui/css/layui.css">
+    <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/about.css">
+</head>
+<body>
+    <!-- 导航 -->
+    <nav class="blog-nav layui-header">
+        <a class="blog-logo" href="index">资源监控中心</a>
+        <!-- 导航菜单 -->
+        <ul class="layui-nav" lay-filter="nav">
+            <li class="layui-nav-item">
+                <a href="index.html" target="_blank"><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="server.html" target="_blank"><i class="fa fa-globe fa-fw"></i>&nbsp;服务器</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="report.html" target="_blank"><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="http://152.55.229.41:8169/commonInfo.html" target="_blank"><i class="fa fa-briefcase fa-fw"></i>&nbsp;资料</a>
+            </li>
+            <li class="layui-nav-item layui-this">
+                <a href="#"><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
+            </li>
+        </ul>
+        <!-- 手机和平板的导航开关 -->
+        <a class="blog-navicon" href="javascript:;">
+            <i class="fa fa-navicon"></i>
+        </a>
+	</nav>
+    <!-- 主体（一般只改变这里的内容） -->
+    <div class="blog-body">
+        <div class="blog-container">
+            <blockquote class="layui-elem-quote sitemap layui-breadcrumb shadow">
+                <a href="index.html" title="控制台">首页</a>
+                <a><cite>关于平台</cite></a>
+            </blockquote>
+            <div class="blog-main">
+                <div class="layui-tab layui-tab-brief shadow" lay-filter="tabAbout">
+                    <ul class="layui-tab-title">
+                        <li lay-id="1">关于平台</li>
+                        <li lay-id="2">关于团队</li>
+                        <li lay-id="3" id="frinedlink">常用链接</li>
+                        <li lay-id="4">Bug建议</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item">
+                            <div class="aboutinfo">
+                                <div class="aboutinfo-figure">
+                                    <img src="./images/dcits.png" alt="资源监控平台" />
+                                </div>
+                                <p class="aboutinfo-nickname">性能测试资源监控中心</p>
+                                <p class="aboutinfo-introduce">专为性能测试打造的资源监控平台，可同时监控至多100台不同类型的服务器，可离线展示数据!</p>
+                                <p class="aboutinfo-location"><i class="fa fa-link"></i>&nbsp;&nbsp;<a href="#">ResourcesMonitoringPlatform</a></p>
+                                <hr />
+                                <div class="aboutinfo-contact">
+                                    <a target="_blank" title="控制台" href="index.html"><i class="fa fa-desktop fa-fw" style="font-size:2.5em;position:relative;top:3px"></i></a>
+                                    <a target="_blank" title="服务器" href="server.html"><i class="fa fa-globe fa-fw" style="font-size:2.5em;position:relative;top:3px"></i></a>
+                                    <a target="_blank" title="报表" href="report.html"><i class="fa fa-bar-chart fa-fw" style="font-size:2.5em;position:relative;top:3px"></i></a>
+                                </div>
+
+                                <fieldset class="layui-elem-field layui-field-title">
+                                    <legend>更新说明</legend>
+                                    <div class="layui-field-box aboutinfo-abstract">
+                                        <p style="text-align:center;">第一版Bug太多,目前为第二版，前端使用Layui框架，后端Java实现，web框架是自己写的。目前没有太大问题，一些不能解决的问题需要更换Web框架进行代码重写!</p>
+                                        <h1>2017.10.18更新</h1>
+                                        <p>将离线工具加入到在线功能。</p>
+                                        <p>增加数据分析功能，可以自动计算指定时间段内指定服务器指定类目的最大值最小值平均值并生成表格。</p>
+                                        <p>完善 关于平台  页面。</p>
+                                        <h1 style="text-align:center;">Continue...</h1>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <!--关于网站End-->
+                        <div class="layui-tab-item">
+                            <div class="aboutinfo">
+                                <div class="aboutinfo-figure">
+                                    <img src="./images/Absolutely.jpg" alt="Absolutely" />
+                                </div>
+                                <p class="aboutinfo-nickname">神州数码性能测试团队</p>
+                                <p class="aboutinfo-introduce">十年专业性能测试经验，电信行业重大项目测试经验。</p>
+                                <p class="aboutinfo-location"><i class="fa fa-location-arrow"></i>&nbsp;安徽 - 合肥</p>
+                                <hr />
+                                <div class="aboutinfo-contact">
+                                    <a title="加入QQ群" href="#"><i class="fa fa-qq fa-2x"></i></a>
+                                    <a title="联系我们" href="#"><i class="fa fa-envelope fa-2x"></i></a>
+                                    <a title="新浪微博" href="#"><i class="fa fa-weibo fa-2x"></i></a>
+                                    <a title="Github" href="#"><i class="fa fa-git fa-2x"></i></a>
+                                </div>
+                                <fieldset class="layui-elem-field layui-field-title">
+                                    <legend>公司简介</legend>
+                                    <div class="layui-field-box aboutinfo-abstract abstract-bloger">
+                                        <p style="text-align:center;">神州数码控股有限公司（港交所代码：0861）成立于2000年联想集团二次创业期间，整合了原先的联想科技、联想系统集成、联想网络公司三家公司。2011/12财年营业额703.19亿港元，是中国最大的整合IT服务提供商。</p>
+                                        <h1>团队信息</h1>
+                                        <p>都是牛逼轰轰的。</p>
+                                        <h1>团队介绍</h1>
+                                        <p>大神云集！</p>
+                                        <h1 style="text-align:center;">The End</h1>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <!--关于作者End-->
+                        <div class="layui-tab-item">
+                            <div class="aboutinfo">
+                                <div class="aboutinfo-figure">
+                                    <img src="./images/handshake.png" alt="常用链接" />
+                                </div>
+                                <p class="aboutinfo-nickname">常用链接</p>
+                                <p class="aboutinfo-location">
+                                    <i class="fa fa-close"></i>经常宕机&nbsp;
+                                    <i class="fa fa-close"></i>不合法规&nbsp;
+                                    <i class="fa fa-close"></i>插边球站&nbsp;
+                                    <i class="fa fa-close"></i>红标报毒&nbsp;
+                                    <i class="fa fa-check"></i>原创优先&nbsp;
+                                    <i class="fa fa-check"></i>技术优先
+                                </p>
+                                <hr />
+                                <div class="aboutinfo-contact">
+                                    <p style="font-size:2em;">人人为我, 我为人人</p>
+                                </div>
+                                <fieldset class="layui-elem-field layui-field-title">
+                                    <legend>Common Link</legend>
+                                    <div class="layui-field-box">
+                                        <ul class="friendlink">
+                                            <li>
+                                                <a target="_blank" href="http://152.55.229.82:8080/autoTest3" title="autoTest" class="friendlink-item">
+                                                    <p class="friendlink-item-pic"><img src="./images/接口自动化测试.png" alt="autoTest" /></p>
+                                                    <p class="friendlink-item-title">接口自动化</p>
+                                                    <p class="friendlink-item-domain">AutoTest</p>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a target="_blank" href="http://152.55.229.41:8169/commonInfo.html" title="资料库" class="friendlink-item">
+                                                    <p class="friendlink-item-pic"><img src="./images/知识库.png" alt="资料库" /></p>
+                                                    <p class="friendlink-item-title">常用资料库</p>
+                                                    <p class="friendlink-item-domain">Repository</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <!--友情链接End-->
+                        <div class="layui-tab-item">
+                            <div class="aboutinfo">
+                                <div class="aboutinfo-figure">
+                                    <img src="./images/messagewall.png" alt="Bug建议" />
+                                </div>
+                                <p class="aboutinfo-nickname">留言墙</p>
+                                <p class="aboutinfo-introduce">欢迎提交Bug或者提出更好的建议优化等！</p>
+                                <p class="aboutinfo-location">
+                                    <i class="fa fa-clock-o"></i>&nbsp;<span id="time"></span>
+                                </p>
+                                <hr />
+                                <div class="aboutinfo-contact">
+                                    <p style="font-size:2em;">沟通交流，拉近你我！</p>
+                                </div>
+                                <fieldset class="layui-elem-field layui-field-title">
+                                    <legend>Leave a message</legend>
+                                    <div class="layui-field-box">
+                                        <div class="leavemessage" style="text-align:initial">
+                                            <form class="layui-form blog-editor" action="">
+                                                <div class="layui-form-item">
+                                                    <textarea name="editorContent" lay-verify="content" id="remarkEditor" placeholder="请输入内容" class="layui-textarea layui-hide"></textarea>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                     <button class="layui-btn" lay-submit="formLeaveMessage" lay-filter="formLeaveMessage">提交留言</button>
+                                                </div>
+                                            </form>
+                                            <ul class="blog-comment">
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <!--留言墙End-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 底部 -->
+    <footer class="blog-footer">
+    <p><span>Copyright</span><span>&copy;</span><span>2017</span><a href="#">神州数码性能测试团队</a><span>Design By Baikapala</span></p>
+    <p>前端框架支持&nbsp;<a href="http://www.layui.com" target="_blank">layui</a></p>
+	</footer>
+	<!--侧边导航-->
+	 <ul class="layui-nav layui-nav-tree layui-nav-side blog-nav-left layui-hide" lay-filter="nav">
+	     <li class="layui-nav-item">
+	          <a href="index.html" target="_blank"><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
+	      </li>
+	      <li class="layui-nav-item">
+	          <a href="server.html" target="_blank"><i class="fa fa-globe fa-fw"></i>&nbsp;服务器</a>
+	      </li>
+	      <li class="layui-nav-item">
+	          <a href="report.html" target="_blank"><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
+	      </li>
+	      <li class="layui-nav-item">
+	          <a href="http://152.55.229.41:8169/commonInfo.html" target="_blank"><i class="fa fa-briefcase fa-fw"></i>&nbsp;资料</a>
+	      </li>
+	      <li class="layui-nav-item layui-this">
+	          <a href="#"><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
+	      </li>
+	 </ul>
+	 <!--遮罩-->
+	 <div class="blog-mask animated layui-hide"></div>
+	 
+	<script type="text/html" id="leave-message-comment">
+	{{# $.each(d, function(i, msg) { var randomNum = Math.floor(Math.random()*6 + 1); }}
+	<li>
+         <div class="comment-parent">
+             <img src="./images/user/{{ randomNum }}.png" alt="{{ msg.username }}"/>
+             <div class="info">
+                 <span class="username">{{ msg.username }}</span>                                                           
+             </div>
+             <div class="content">
+                 	{{ msg.content }}
+             </div>
+             <p class="info info-footer"><i class="fa fa-clock-o"></i>&nbsp;<span class="time">{{ msg.createTime }}</span></p>
+         </div>
+	</li>
+	{{#  }); }}
+	</script>
+	
+    <!-- layui.js -->
+    <script src="libs/jquery.js"></script>
+	<script src="libs/layui/layui.js"></script>
+	<script src="libs/datatables/js/jquery.dataTables.min.js"></script>
+    <!-- 全局脚本 -->
+    <script src="js/global.js"></script>
+    <!-- 本页脚本 -->
+    <script src="js/about.js"></script>
+</body>
+</html>
