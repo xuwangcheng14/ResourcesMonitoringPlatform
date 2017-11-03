@@ -68,3 +68,7 @@ th {
 	font-size: 22px;
 	color:#FF5722;
 }
+
+#weblogic-reboot-logs > p {
+	font-size: 16px;
+}

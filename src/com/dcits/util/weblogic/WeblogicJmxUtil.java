@@ -249,7 +249,7 @@ public class WeblogicJmxUtil {
 				mark = info[3].trim();
 			}
 			try {				
-				servers.add(new WeblogicInfo(++weblogcId, ipport[0].trim(), ipport[1].trim(), info[1].trim(), info[2].trim(), mark, DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN), ""));				
+				servers.add(new WeblogicInfo(++weblogcId, ipport[0].trim(), ipport[1].trim(), info[1].trim(), info[2].trim(), mark, DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN), "", ""));				
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();

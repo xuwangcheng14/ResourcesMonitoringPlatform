@@ -27,3 +27,6 @@
 .setting-parameters .layui-input-block {
 	margin-left: 180px;
 }
+.server-tags-label {
+	cursor:pointer;
+}

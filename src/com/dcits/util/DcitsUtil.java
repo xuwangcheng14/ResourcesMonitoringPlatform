@@ -5,9 +5,17 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+
+import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import com.dcits.bean.JvmInfo;
+import com.dcits.bean.WeblogicInfo;
 
 /**
  * 工具类
@@ -105,4 +113,73 @@ public class DcitsUtil {
         return (new Formatter()).format("%1$d天 %2$02d:%3$02d:%4$02d.%5$03d",  
                 days, hours, mins, seconds, minseconds).toString();  
     }  
+	
+	
+	public static Object[] addWeblogicJvm(WeblogicInfo info) {
+		boolean flag = false ;
+		String msg = "";
+		JvmInfo jvmInfo = null;
+		
+		//检查是否有对应的parameters参数
+		if (StringUtils.isEmpty(info.getParameters())) {
+			msg = "你还没设置该weblogic信息的附加参数!";
+			return new Object[]{flag, msg, jvmInfo};
+		}
+		Map maps = null;
+		try {
+			maps = new ObjectMapper().readValue(info.getParameters(), Map.class);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			msg = "解析附加参数出错:" + e.getMessage();
+			return new Object[]{flag, msg, jvmInfo};	
+		}
+		
+		//创建新的jvm对象
+		jvmInfo = new JvmInfo();
+		
+		try {
+			jvmInfo.setUsername(maps.get("linuxLoginUsername").toString());
+			jvmInfo.setPassword(maps.get("linuxLoginPassword").toString());
+			jvmInfo.setJavaHome(maps.get("javaHome").toString());
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			msg = "附加参数设置错误!请检查!";
+			return new Object[]{flag, msg, jvmInfo};
+		}
+		
+		jvmInfo.setHost(info.getHost());
+		jvmInfo.setPort("22");		
+		jvmInfo.setServerId(info.getServerId());
+		jvmInfo.setWeblogicPort(info.getPort());
+				
+		//获取pid
+		try {
+			jvmInfo.setPid();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			msg = "获取pid出错";
+			return new Object[]{flag, msg, jvmInfo};
+		}
+		
+		try {
+			jvmInfo.conectJvm();
+			jvmInfo.setInfo();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			jvmInfo.disconect();
+			msg = jvmInfo.getErrorInfo();
+			return new Object[]{flag, msg, jvmInfo};
+		}
+		
+		jvmInfo.setStopFlag(false);
+		jvmInfo.setId(++DcitsUtil.id);
+		info.setJvmId(jvmInfo.getId());
+		jvmInfo.setMark(StringUtils.isEmpty(info.getMark()) ? "weblogic(" + info.getHost() + ":" + info.getPort() + ")" : info.getMark() );	
+		flag = true;
+		return new Object[]{flag, msg, jvmInfo};
+	}
 }

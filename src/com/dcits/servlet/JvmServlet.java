@@ -195,7 +195,6 @@ public class JvmServlet extends AbstractHttpServlet {
 		ajaxData.put("processNames", processNames);		
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@ExecuteRequest
 	public void addWeblogicJvm(Map<String, Object> ajaxData, HttpServletRequest request, @RequestBody("id") Integer weblogicId, @RequestBody("userKey")String userKey) {
 		UserSpace space = ServletUtil.getUserSpace(userKey);
@@ -211,7 +210,7 @@ public class JvmServlet extends AbstractHttpServlet {
 			return;
 		}
 		
-		//检查是否有对应的parameters参数
+		/*//检查是否有对应的parameters参数
 		if (StringUtils.isEmpty(info.getParameters())) {
 			ajaxData.put("msg", "你还没设置该weblogic信息的附加参数!");
 			return;
@@ -267,11 +266,19 @@ public class JvmServlet extends AbstractHttpServlet {
 		}
 		
 		jvmInfo.setStopFlag(false);
-		jvmInfo.setId(++DcitsUtil.id);
+		int r = ++DcitsUtil.id;
+		jvmInfo.setId(r);
+		info.setJvmId(r);
 		jvmInfo.setMark(StringUtils.isEmpty(info.getMark()) ? "weblogic(" + info.getHost() + ":" + info.getPort() + ")" : info.getMark() );	
-		space.getJvmInfos().add(jvmInfo);
-		ajaxData.put("returnCode", LinuxConstant.CORRECT_RETURN_CODE);
+		space.getJvmInfos().add(jvmInfo);*/
+		Object[] os = DcitsUtil.addWeblogicJvm(info);
 		
+		if (!(boolean)os[0]) {
+			ajaxData.put("msg", (String)os[1]);
+			return;
+		}
+		ajaxData.put("returnCode", LinuxConstant.CORRECT_RETURN_CODE);
+		space.getJvmInfos().add((JvmInfo)os[2]);		
 	}
 	
 	@ExecuteRequest

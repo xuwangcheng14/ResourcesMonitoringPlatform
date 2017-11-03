@@ -196,7 +196,7 @@ public class LinuxInfo extends ServerInfo {
 		return home;
 	}
 	
-	public LinuxInfo(String host, String port, String username, String password, String time, String parameters) {
+	public LinuxInfo(String host, String port, String username, String password, String time, String parameters, String tags) {
 		super();
 		this.host = host;
 		this.port = port;
@@ -204,9 +204,11 @@ public class LinuxInfo extends ServerInfo {
 		this.password = password;
 		this.time = time;
 		this.parameters = parameters;
+		this.tags = tags;
 	}
 
-	public LinuxInfo(Integer id, String port, String host, String username, String password, String mark, String time, String parameters) {
+	public LinuxInfo(Integer id, String port, String host, String username, String password
+			, String mark, String time, String parameters, String tags) {
 		super();
 		this.id = id;
 		this.port = port;
@@ -216,6 +218,7 @@ public class LinuxInfo extends ServerInfo {
 		this.mark = mark;
 		this.time = time;
 		this.parameters = parameters;
+		this.tags = tags;
 	}
 	
 	
@@ -229,6 +232,7 @@ public class LinuxInfo extends ServerInfo {
 		this.mark = serverInfo.mark;
 		this.parameters = serverInfo.parameters;
 		this.time = DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN);
+		this.tags = serverInfo.tags;
 	}
 	
 	public LinuxInfo() {

@@ -94,7 +94,7 @@ body {
 /* 中等屏幕（桌面显示器，大于等于 992px） */
 @media (min-width: 992px) {
     .blog-container {
-        width: 962px;
+        width: 992px;
     }
 
     .blog-main > .blog-main-left {
@@ -120,6 +120,13 @@ body {
     
 }
 
+/* 大屏幕（大桌面显示器，大于等于 1200px） */
+@media (min-width: 1920px) {
+    .blog-container {
+        width: 1600px;
+    }    
+    
+}
 
 /*顶部导航*/
 .blog-nav {

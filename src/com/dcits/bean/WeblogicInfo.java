@@ -70,8 +70,10 @@ public class WeblogicInfo extends ServerInfo{
 	
 	private String realTime;
 	
+	private Integer jvmId;
+	
 	public WeblogicInfo(Integer id, String host, String port, String username,
-			String password, String mark, String time, String parameters) {
+			String password, String mark, String time, String parameters, String tags) {
 		super();
 		this.id = id;
 		this.host = host;
@@ -81,11 +83,12 @@ public class WeblogicInfo extends ServerInfo{
 		this.mark = mark;
 		this.time = time;
 		this.parameters = parameters;
+		this.tags = tags;
 	}
 	
 
 	public WeblogicInfo(String host, String port, String username,
-			String password, String time, String parameters) {
+			String password, String time, String parameters, String tags) {
 		super();
 		this.host = host;
 		this.port = port;
@@ -93,6 +96,7 @@ public class WeblogicInfo extends ServerInfo{
 		this.password = password;	
 		this.time = time;
 		this.parameters = parameters;
+		this.tags = tags;
 	}
 
 	public WeblogicInfo(ServerInfo serverInfo) {
@@ -105,6 +109,7 @@ public class WeblogicInfo extends ServerInfo{
 		this.mark = serverInfo.mark;
 		this.time = DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN);
 		this.parameters = serverInfo.parameters;
+		this.tags = serverInfo.tags;
 	}
 	
 	public WeblogicInfo() {
@@ -131,6 +136,13 @@ public class WeblogicInfo extends ServerInfo{
 	}
 
 	
+	public Integer getJvmId() {
+		return jvmId;
+	}
+	
+	public void setJvmId(Integer jvmId) {
+		this.jvmId = jvmId;
+	}
 	
 	public void setJdbcRuntime(ObjectName jdbcRuntime) {
 		this.jdbcRuntime = jdbcRuntime;

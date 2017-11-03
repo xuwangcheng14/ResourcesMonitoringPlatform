@@ -56,10 +56,23 @@ public class ServerInfo {
 	 */
 	protected String parameters;
 	
+	/**
+	 * 标签
+	 */
+	protected String tags;
 
 	public ServerInfo() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	
+	
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
+	
+	public String getTags() {
+		return tags;
 	}
 	
 	public void setParameters(String parameters) {

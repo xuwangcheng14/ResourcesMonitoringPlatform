@@ -28,12 +28,13 @@ public class ServerDao {
 	 */
 	public int saveServer(ServerInfo info) throws Exception {
 		ServerInfoMapper mapper = new ServerInfoMapper();
-		String sql = "insert into ServerInfo values(null,?,?,?,?,?,?,?,?,?)";
+		String sql = "insert into ServerInfo values(null,?,?,?,?,?,?,?,?,?,?)";
 		
 		try {
 			mapper.execSQL(sql, new Object[]{info.getHost(), info.getPort()
 							, info.getUsername(), info.getPassword(), info.getMark()
-							, DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN), DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN), info.getType(), info.getParameters()});
+							, DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN), DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN)
+							, info.getType(), info.getParameters(), info.getTags()});
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,11 +52,11 @@ public class ServerDao {
 	 */
 	public int updateServer(ServerInfo info) throws Exception {
 		ServerInfoMapper mapper = new ServerInfoMapper();
-		String sql = "update ServerInfo set host=?,port=?,username=?,password=?,mark=?,type=?,parameters=? where id=?";
+		String sql = "update ServerInfo set host=?,port=?,username=?,password=?,mark=?,type=?,parameters=?,tags=? where id=?";
 		
 		try {
 			mapper.execSQL(sql, info.getHost(), info.getPort(), info.getUsername(), info.getPassword(), info.getMark()
-						, info.getType(), info.getParameters(),info.getServerId());
+						, info.getType(), info.getParameters(), info.getTags(),info.getServerId());
 			
 		} catch (Exception e) {
 			// TODO: handle exception

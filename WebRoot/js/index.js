@@ -432,9 +432,15 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
             	tableDom:"#weblogic table",
             	columnVisibleSettingDom:"#weblgic-columns",
             	dtParams:{
-            		aTargets:[23],
+            		aTargets:[0, 24],
             		ajaxUrl:"weblogic/getList",
             		columns:[
+							{
+								  "data": null,
+								  "render": function(data) {
+									return '<input type="checkbox" class="weblogic-server"  data-id="' + data.id + '">';
+								  }
+							  },
                              {
                           	   "data":"id"  
                              },
@@ -622,6 +628,7 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
                           	   "render":function(data) {
                           		   var html = '<button type="button" class="layui-btn layui-btn-danger layui-btn-small" data-type="weblogic" onclick="reconnect(' + data.id + ',\'weblogic\');">重连</button>'
                           		   	+ '&nbsp;<button type="button" class="layui-btn layui-btn-danger layui-btn-small" data-type="weblogic" onclick="delServer(this,' + data.id + ',\'weblogic\');">删除</button>'
+                          		  + '&nbsp;<button type="button" class="layui-btn layui-btn-danger layui-btn-small" onclick="rebootWeblogic(' + data.id + ');">重启</button>'
                           		  + '&nbsp;<button type="button" class="layui-btn layui-btn-normal layui-btn-small" onclick="getWeblogicJvm(' + data.id + ');">JVM</button>';
                           		   return html;
                           	   }
@@ -938,8 +945,43 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         			layui.data('rmp', {key:'userKey', value:idKey});	
         			window.location.reload();
         		});        		
-        	}       	
+        	},
+        	'#weblogic button:eq(0)':function() { //批量重启weblogic
+        		return false;
+        		var checkboxList = $("#weblogic .weblogic-server:checked");
+        		if (checkboxList.length < 1) {
+					return;
+				}
+        		
+        		layer.confirm('确认重启选中的' + checkboxList.length + '条记录？', {title:'警告', icon:3}, function(index) {
+        			layer.close(index);
+        			layer.open({
+        				type:1,
+        				title:"webogic重启日志",
+        	    		content:'<div style="padding:18px;" id="weblogic-reboot-logs"></div>',
+        	    		area: ['800px', '600px'],
+        	    		success:function(layero, index) {
+        	    			$.each(checkboxList, function(i, n) {
+        	    				var data = (returnObject.weblogic.table).row( $(this).parents('tr') ).data();
+        	    				$("#weblogic-reboot-logs").append('<p>['+ new Date().Format("yyyy-MM-dd hh:mm:ss") +'][' 
+        	    						+ data.host + ':' + data.port + '-' + data.mark + '] ' + '开始重启...</p>');
+        	    				
+        	    				$.post("weblogic/reboot", {id:data.id, userKey:userKey}, function(json) {
+        	    					json = JSON.parse(json);
+        	    					var flag = "<span style=\"color:#FF5722;\">重启失败:</span>";
+        	    					if (json.returnCode == 0) {
+        	    						flag = "<span style=\"color:#009688;\">重启成功:</span>";
+        	    					}
+        	    					$("#weblogic-reboot-logs").append('<p>['+ new Date().Format("yyyy-MM-dd hh:mm:ss") +'][' 
+            	    						+ data.host + ':' + data.port + '-' + data.mark + '] ' + flag + json.msg +'</p>');
+        	    				});
+        	    			});
+        	    		}
+        			});
+        		});
+        	}
         });   
+        
         
         //linux命令控制台
         $("#linux button:eq(0)").on('click', function() {
@@ -1061,6 +1103,13 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         	        	checkedBox(tableView, setting.columnVisibleSettingDom);    
         	        	bindShowColumns(tableView, setting.typeName); 
         	        	 	
+     	        		$("#"+ setting.typeName + " input[type='checkbox']:eq(0)").click(function() {
+     	           		if ($(this).is(":checked")) {
+     	           			$("#"+ setting.typeName + " input[type='checkbox']").prop("checked",true);   
+     	           		} else {
+     	           			$("#"+ setting.typeName + " input[type='checkbox']").prop("checked",false);  
+     	           		}
+     	        		});
         	        	if ($("#" + setting.typeName).is(":hidden")) {
         	        		returnInfo.intervalId=0;		
         	        	} else {
@@ -1671,6 +1720,22 @@ function getWeblogicJvm(id) {
 			layer.alert(json.msg, {icon:5});
 		}
 	});
+}
+
+
+//重启weblogic
+function rebootWeblogic(id) {
+	return false;
+	var loadIndex = layer.msg('正在重启该weblogic...', {icon:16, time:60000, shade:0.35});
+	$.post("weblogic/reboot", {id:id, userKey:userKey}, function(json) {
+		layer.close(loadIndex);
+		json = JSON.parse(json);
+		if (json.returnCode == 0) {
+			layer.alert("该weblogic重启成功", {icon:1});
+		} else {
+			layer.alert("该weblogic重启失败", {icon:5});
+		}
+	});	
 }
 
 

@@ -7,7 +7,8 @@ var additionItemParameters = {
 		"1":{
 			linuxLoginUsername:"",
 			linuxLoginPassword:"",
-			javaHome:""
+			javaHome:"",
+			startScriptPath:""
 		}
 };
 
@@ -97,6 +98,17 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
          	        	           {
          	        	        	   "data":"time",
          	        	        	  "render":CONSTANT.DATA_TABLES.COLUMNFUN.ELLIPSIS
+         	        	           },
+         	        	          {
+         	        	        	   "data":"tags",
+         	        	        	  "render":function(data){
+         	        	        		  var arrs = data.split(" ");
+         	        	        		  var html = '';
+         	        	        		  $.each(arrs, function(i, n) {
+         	        	        			  html += '<span class="label label-success server-tags-label">' + n + '</span>&nbsp;';
+         	        	        		  });
+         	        	        		  return html;
+         	        	        	  }
          	        	           },
          	        	           {
          	        	        	   "data":"mark",
@@ -218,11 +230,17 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
         	});
  			
  			//刷新表格
- 			$(document).delegate('.server-btn-util > .right-btn-tool > button:eq(2)', 'click', function() {
+ 			$(document).delegate('.server-btn-util > .right-btn-tool > button:eq(3)', 'click', function() {
         		table.ajax.reload(function(data) {
         			layer.msg('重新加载成功!', {icon:1, time:1500});
         		} ,false);
         	});
+ 			
+ 			//筛选
+ 			$('.layui-table').delegate('.server-tags-label', 'click', function() {
+ 				var that = this;
+ 				table.columns(8).search($(that).text()).draw();
+ 			});
  			
  			//复制
  			$('.layui-table').delegate('.copy-server', 'click', function() {
@@ -232,7 +250,7 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
 	        			type:1,
 	        			title:'复制服务器信息',
 	        			content:singleSaveHtml,
-	        			area: ['680px', '540px'],
+	        			area: ['680px', '580px'],
 	        			success:function() {
 	        				$.each(data, function(key, value) {
 	        					if ($("#" + key)) {
@@ -261,7 +279,7 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
         			type:1,
         			title:'编辑服务器信息',
         			content:singleSaveHtml,
-        			area: ['680px', '540px'],
+        			area: ['680px', '580px'],
         			success:function() {
         				$.each(data, function(key, value) {
         					if ($("#" + key)) {
@@ -372,6 +390,7 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
 				}
 				var that = this;
 				table.ajax.url(ajaxUrl).load(function(json) {
+					table.columns(8).search('').draw();
 					$(that).removeClass("layui-btn-primary").addClass("layui-btn-normal").siblings("button").removeClass("layui-btn-normal").addClass("layui-btn-primary");  			
 				}, false);
 				
@@ -383,11 +402,16 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
 	    			type:1,
 	    			title:'添加新的服务器',
 	    			content:singleSaveHtml,
-	    			area: ['680px', '540px'],
+	    			area: ['680px', '580px'],
 	    			success:function() {
 	    				form.render();
 	    			}
 	    		});
+	    	});
+	    	
+	    	//命令执行
+	    	$('.server-btn-util > .right-btn-tool > button:eq(2)').click(function() {    		    		
+	    		
 	    	});
 	    	
 	    	//添加或者编辑页面切换类型时改变parameters
@@ -428,7 +452,7 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
 	    			type:1,
 	    			title:'附加项填写',
 	    			content:html,
-	    			area:['600px', '250px'],
+	    			area:['600px', '360px'],
 	    			cancel:function(index, layero) {
 	    				$.each(settingParameters, function(key, value) {
 	    					if ($(".setting-parameters #" + key)) {

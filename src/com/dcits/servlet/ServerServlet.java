@@ -90,7 +90,7 @@ public class ServerServlet extends AbstractHttpServlet {
 	}
 	
 	/**
-	 * 报错留言
+	 * 保存留言
 	 * @param ajaxData
 	 * @param request
 	 * @param userKey
@@ -274,7 +274,7 @@ public class ServerServlet extends AbstractHttpServlet {
 	}
 	
 	
-	@SuppressWarnings({ "unused", "unchecked" })
+	@SuppressWarnings({"unchecked" })
 	@ExecuteRequest
 	public void analyzeData(Map<String, Object> ajaxData, HttpServletRequest request) {
 		String body = "";
@@ -364,8 +364,9 @@ public class ServerServlet extends AbstractHttpServlet {
 		info.setMark(request.getParameter("mark"));
 		info.setType(request.getParameter("type"));
 		info.setParameters(request.getParameter("parameters"));
+		info.setTags(request.getParameter("tags"));
 		
-		if ("0".equals(info.getType())) {
+		if ("0".equals(info.getType()) && StringUtils.isEmpty(info.getPort())) {
 			info.setPort("22");
 		}
 		
@@ -394,7 +395,7 @@ public class ServerServlet extends AbstractHttpServlet {
 			msg = "操作数据库时发生了错误,详情：" + e.getMessage();			
 		}
 		
-		if (ret != null && ret < 1) {
+		if (ret == null || ret < 1) {
 			ajaxData.put("returnCode", Constants.ERROR_RETURN_CODE);
 			msg = "更新或者添加到数据库失败,可能已有重复记录或者记录已被删除!";
 		}

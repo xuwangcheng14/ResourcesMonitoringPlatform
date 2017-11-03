@@ -1,19 +1,15 @@
 package com.dcits.util;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.activation.CommandMap;
-
 import org.junit.Test;
 
-import com.dcits.consts.CommandConstant;
+import com.dcits.bean.LinuxInfo;
+import com.dcits.util.linux.GetLinuxInfoUtil;
 
 public class TestUtil {
 	
 	@Test
 	public void test1() throws Exception {
-		/*LinuxInfo info = new LinuxInfo("39.108.62.206", "22", "root", "Yj19901108", "", "");
+		LinuxInfo info = new LinuxInfo("127.0.0.1", "7878", "username", "password", "", "", "");
 		long begin = System.currentTimeMillis();
 		info.conect();
 		long end = System.currentTimeMillis();
@@ -23,13 +19,13 @@ public class TestUtil {
 		end = System.currentTimeMillis();
 		
 		System.out.println(end - begin);
-		String str = GetLinuxInfoUtil.execCommand(info.getConn(), "more .bash_profile", 999, null, 2);
+		String str = GetLinuxInfoUtil.execCommand(info.getConn(), "ls -ltr", 999, null, 2);
 		System.out.println(str);
 		String[] strs = str.trim().split("\\n");
 		for (String s:strs) {
 			System.out.println(s);
 		}
-		info.disconect();*/
+		info.disconect();
 		
 		/*String abcd ="asa,dasda,ww，adas,ada，sdaa";
 		String[] strs = abcd.split("[,，]");

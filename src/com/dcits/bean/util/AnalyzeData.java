@@ -18,6 +18,7 @@ public class AnalyzeData {
 	//{id:"", host:"", serverType:""}
 	private Map<String, Object> ruleItemStr = new HashMap<String, Object>();
 	
+	@SuppressWarnings("unchecked")
 	public void analyzeData(Map<String, List<String>> itemInfos, Map<String, Map<String, Object>> datas,
 			Map<String, List<String>> dates) {
 		

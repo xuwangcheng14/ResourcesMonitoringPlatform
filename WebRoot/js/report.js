@@ -690,7 +690,7 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 					var htmlJvm = (json.jvmCount == 0 ? '' : analyzeResultTpl.render({"type":"jvm","data":analyzeResultData}));
 					layer.open({
 						type:1,
-			    		title:"查看结果-复制可直接粘贴到Excel表格中",
+			    		title:"查看结果-全部复制可直接粘贴到Excel表格中",
 			    		content:'<div id="analyze-result-data-view"></div>',
 			    		area: ['900px', '680px'],
 			    		success:function(layero, index) {

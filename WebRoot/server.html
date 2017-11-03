@@ -17,19 +17,19 @@
             <!-- 导航菜单 -->
             <ul class="layui-nav" lay-filter="nav">
                 <li class="layui-nav-item">
-                    <a href="index.html" target="_blank"><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
+                    <a href="index.html" ><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
                 </li>
                 <li class="layui-nav-item layui-this">
                     <a href="#"><i class="fa fa-globe fa-fw"></i>&nbsp;服务器</a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="report.html" target="_blank"><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
+                    <a href="report.html" ><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
                 </li>
                 <li class="layui-nav-item">
                     <a href="http://152.55.229.41:8169/commonInfo.html" target="_blank"><i class="fa fa-briefcase fa-fw"></i>&nbsp;资料</a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="about.html" target="_blank"><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
+                    <a href="about.html" ><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
                 </li>
             </ul>
             <!-- 手机和平板的导航开关 -->
@@ -49,6 +49,7 @@
 					<span class="right-btn-tool">
 						<button class="layui-btn">添加服务器</button>
 						<button class="layui-btn">批量操作</button>
+						<button class="layui-btn">执行命令</button>
 						<button class="layui-btn"><i class="layui-icon">&#x1002;</i></button>
 					</span>					
     			</div>
@@ -64,6 +65,7 @@
 								  <th>类型</th>
 								  <th>添加时间</th>
 								  <th>最近使用时间</th>
+								  <th>标签</th>
 								  <th>备注</th>
 								  <th>操作</th>
 								  
@@ -83,19 +85,19 @@
     <!--侧边导航-->
     <ul class="layui-nav layui-nav-tree layui-nav-side blog-nav-left layui-hide" lay-filter="nav">
         <li class="layui-nav-item">
-             <a href="index.html" target="_blank"><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
+             <a href="index.html" ><i class="fa fa-desktop fa-fw"></i>&nbsp;控制台</a>
          </li>
          <li class="layui-nav-item layui-this">
              <a href="#"><i class="fa fa-globe fa-fw"></i>&nbsp;服务器</a>
          </li>
          <li class="layui-nav-item">
-             <a href="report.html" target="_blank"><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
+             <a href="report.html" ><i class="fa fa-bar-chart fa-fw"></i>&nbsp;报表</a>
          </li>
          <li class="layui-nav-item">
              <a href="http://152.55.229.41:8169/commonInfo.html" target="_blank"><i class="fa fa-briefcase fa-fw"></i>&nbsp;资料</a>
          </li>
          <li class="layui-nav-item">
-             <a href="about.html" target="_blank"><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
+             <a href="about.html" ><i class="fa fa-info fa-fw"></i>&nbsp;关于平台</a>
          </li>
     </ul>
     <!--遮罩-->
@@ -143,6 +145,12 @@
 			    <label class="layui-form-label">备注</label>
 			    <div class="layui-input-block">
 			      <input type="text" name="mark" id="mark" placeholder="如果通过端口转发设置，请备注真实服务器地址" autocomplete="off" class="layui-input">
+			    </div>
+			  </div>
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">标签</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="tags" id="tags" placeholder="使用空格区分" autocomplete="off" class="layui-input">
 			    </div>
 			  </div>
 			  <div class="layui-form-item">

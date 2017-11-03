@@ -209,8 +209,7 @@ public class GetLinuxInfoUtil {
 		session.execCommand(command);	
 		return brStat;
 	}
-	
-	
+
 	
 	/**
 	 * 解析从前台传过来的主机信息列表
@@ -237,7 +236,7 @@ public class GetLinuxInfoUtil {
 				port = ipport[1];
 			}
 			try {
-				servers.add(new LinuxInfo(++infoId, port, ipport[0], info[1], info[2], mark, DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN), ""));
+				servers.add(new LinuxInfo(++infoId, port, ipport[0], info[1], info[2], mark, DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN), "", ""));
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();

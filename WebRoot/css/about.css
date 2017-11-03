@@ -155,6 +155,12 @@
     }
 }
 
+/* 中等屏幕（桌面显示器，大于等于 992px） */
+@media (min-width: 1200px) {
+    .blog-container {
+        width: 1200px;
+    }
+}
 
 .user-avatar {
 	height: 50px;
