@@ -2,11 +2,17 @@ package com.dcits.servlet;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -30,6 +37,7 @@ import com.dcits.bean.LinuxInfo;
 import com.dcits.bean.ServerInfo;
 import com.dcits.bean.WeblogicInfo;
 import com.dcits.bean.util.AnalyzeData;
+import com.dcits.bean.util.ExportFileInfo;
 import com.dcits.bean.util.LeaveMessage;
 import com.dcits.bean.util.UserSpace;
 import com.dcits.dao.LeaveMessageDao;
@@ -155,18 +163,29 @@ public class ServerServlet extends AbstractHttpServlet {
 		String userKey = "";
 		if (m.find()) {
 			userKey = m.group(1);
-		}		
+		}				
 		
 		UserSpace space = ServletUtil.getUserSpace(userKey);
 		
 		if (space == null) {
 			ajaxData.put("msg", "userKey不正确!");
 			return;
-		}			
+		}	
+		
+		
+		r = Pattern.compile("recordCount:(.*),");
+		m = r.matcher(body);
+		String recordCount = "";
+		if (m.find()) {
+			recordCount = m.group(1);
+		}
 									
 		String rootPath = request.getSession().getServletContext().getRealPath("");
+
+		String fileName = "infos_" + System.currentTimeMillis() + "_" + userKey + ".json";
+		String filePath = "infos/" + fileName;
 		
-		File infosFile = new File(rootPath + "/infos/infos.json");
+		File infosFile = new File(rootPath + "/" + filePath);
 		
 		BufferedOutputStream buff = null;
 		Map<String, Object> serverList = new HashMap<String, Object>();
@@ -178,7 +197,8 @@ public class ServerServlet extends AbstractHttpServlet {
 		String serverLists = jo.toString();
 		
 		
-		String content = "{\"serverList\":" + serverLists + "," + body.replace("dates:", "\"dates\":").replace("serverInfos:", "\"serverInfos\":").replaceAll(",userKey:(.*)", "") + "}";					
+		String content = "{\"serverList\":" + serverLists + "," + body.replace("dates:", "\"dates\":")
+				.replace("serverInfos:", "\"serverInfos\":").replaceAll(",recordCount(.*)", "") + "}";					
 		try {
 			buff = new BufferedOutputStream(new FileOutputStream(infosFile));			
 			buff.write(content.getBytes("UTF-8"));
@@ -199,9 +219,101 @@ public class ServerServlet extends AbstractHttpServlet {
 			}
 		}
 		
-		ajaxData.put("filePath", "./infos/infos.json");
+		ExportFileInfo fileInfo = new ExportFileInfo();
+		fileInfo.setExportTime(DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN));
+		fileInfo.setFileName(fileName);
+		fileInfo.setFilePath(filePath);
+		fileInfo.setRecordCount(recordCount);
+		fileInfo.setServerCount(space.getCount());
+		String fileSize = "";
+		if (infosFile.length() > 1024 * 1024) {
+			fileSize = DcitsUtil.byteToMB(infosFile.length()) + "MB";
+		} else {
+			fileSize = DcitsUtil.byteToKB(infosFile.length()) + "KB";
+		}
+		
+		fileInfo.setFileSize(fileSize);
+		
+		space.getExportFileInfos().add(fileInfo);
+		ajaxData.put("fileName", fileName);
+		ajaxData.put("filePath", "./" + filePath);
 		ajaxData.put("returnCode", Constants.CORRECT_RETURN_CODE);
 		
+	}
+	
+	/**
+	 * 获取指定路径的文件信息
+	 * @param ajaxData
+	 * @param request
+	 * @param userKey
+	 */
+	@ExecuteRequest
+	public void getFileInfo(Map<String, Object> ajaxData, HttpServletRequest request, @RequestBody("filePath")String filePath) {
+		File file = new File(request.getSession().getServletContext().getRealPath("/") + filePath);
+		if (!file.exists()) {
+			ajaxData.put("msg", "该文件不存在,请刷新表格重试!");
+			return;
+		}
+		
+		//读取文件内容并返回给前台
+		List<String> strs = null;
+		try {
+			strs = IOUtils.readLines(new FileInputStream(file), "UTF-8");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ajaxData.put("msg", "读取文件出错,请重试");
+			return;
+		}
+		
+		
+		ajaxData.put("infos", strs.get(0));
+		ajaxData.put("returnCode", Constants.CORRECT_RETURN_CODE);	
+	}
+	
+	
+	/**
+	 * 获取当前userSpace空间下的历史导出文件列表
+	 * @param ajaxData
+	 * @param request
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@ExecuteRequest
+	public void getFileList(Map<String, Object> ajaxData, HttpServletRequest request, @RequestBody("userKey")String userKey) {
+		UserSpace space = ServletUtil.getUserSpace(userKey);
+		
+		if (space == null) {
+			ajaxData.put("msg", "userKey不正确!");
+			return;
+		}
+		List<ExportFileInfo> infos = space.getExportFileInfos();
+		
+		//按导出日期排序
+		Collections.sort(infos, new Comparator() {
+
+			@Override
+			public int compare(Object o1, Object o2) {
+				// TODO Auto-generated method stub
+				SimpleDateFormat format = new SimpleDateFormat(DcitsUtil.FULL_DATE_PATTERN);
+				long a1 = 0L;
+				long a2 = 0L;
+				try {
+					a1 = format.parse(((ExportFileInfo) o1).getExportTime()).getTime();
+					a2 = format.parse(((ExportFileInfo) o2).getExportTime()).getTime();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return (int) (a2 -a1);
+			}
+			
+		});
+		
+		ajaxData.put("data", space.getExportFileInfos());
+		ajaxData.put("returnCode", Constants.CORRECT_RETURN_CODE);	
 	}
 	
 	/**
@@ -365,6 +477,7 @@ public class ServerServlet extends AbstractHttpServlet {
 		info.setType(request.getParameter("type"));
 		info.setParameters(request.getParameter("parameters"));
 		info.setTags(request.getParameter("tags"));
+		info.setRealHost(request.getParameter("realHost"));
 		
 		if ("0".equals(info.getType()) && StringUtils.isEmpty(info.getPort())) {
 			info.setPort("22");

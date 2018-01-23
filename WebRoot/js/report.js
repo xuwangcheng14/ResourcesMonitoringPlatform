@@ -1,31 +1,3 @@
-//DT默认初始化参数
-var CONSTANT = {
-	DATA_TABLES : {
-		DEFAULT_OPTION:{
-			"aaSorting": [[ 1, "asc" ]],//默认第几个排序
-			"bStateSave": true,//状态保存
-			"processing": false,   //显示处理状态
-			"serverSide": false,  //服务器处理
-			"autoWidth": false,   //自动宽度
-			"scrollX": true,
-			"lengthChange": false,
-			"paging": false,
-			"language": {
-				"url": "libs/zh_CN.json"
-			},
-			"lengthMenu": [[100], ['100']],  //显示数量设置
-		},
-		//常用的COLUMN
-		COLUMNFUN:{
-			//过长内容省略号替代
-			ELLIPSIS:function (data, type, row, meta) {
-				data = data||"";
-				return '<span title="' + data + '" class="layui-elip">' + data + '</span>';
-			}
-		}
-	}
-};
-
 //视图显示设置
 var viewVisable = {
 	linux:true,
@@ -38,6 +10,8 @@ var viewVisable = {
 var analyzeDataTpl;
 //分析结果展示模板
 var analyzeResultTpl;
+//历史记录文件展示模板
+var historyInfoFileTpl;
 
 var analyzeResultData;
 
@@ -130,7 +104,7 @@ var propertyObject = {
 			fullGCTotalCount:[],
 			fullGCTime:[],
 			GCTotalTime:[]
-		},		
+		}		
 	}
 	
 };
@@ -171,6 +145,7 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 	
 	analyzeDataTpl = laytpl($("#choose-analyze-data").html());
 	analyzeResultTpl = laytpl($("#analyze-result-table").html());
+	historyInfoFileTpl = laytpl($("#history-files-table").html());
 
 	///////////////////////////////////////////////////////////////////////////////
 
@@ -504,7 +479,7 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 							return data.host + ":" + data.port;
 						}
 					}, {
-						"data": "mark",
+						"data": "mark"
 					}, {
 						"data": "username",
 						"visible": false
@@ -620,6 +595,59 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 			alert(111);
 		});
 
+		//打开历史文件记录
+		$("#history-info-files").click(function() {
+			getUserKey();
+			$.post("server/getFileList", {userKey:userKey}, function (json) {
+				json = JSON.parse(json);
+				if (json.returnCode == 0) {
+					layer.open({
+						content:historyInfoFileTpl.render(json.data),
+						title:"历史文件记录",
+						area: ['880px', '570px'],
+						type:1,
+						shadeClose:true,
+						anim:5				
+					});
+				} else {
+					layer.alert(json.msg, {icon:5});
+				}
+				
+			});						
+		});
+		
+		//刷新历史文件记录表
+		$(document.body).delegate(".layui-layer-content > #refresh-history-table", 'click', function(){
+			getUserKey();
+			var that = this;
+			$.post("server/getFileList", {userKey:userKey}, function (json) {
+				json = JSON.parse(json);
+				if (json.returnCode == 0) {
+					$(that).parents(".layui-layer-content").html(historyInfoFileTpl.render(json.data));
+					layer.msg("刷新成功!", {icon:1, time:1500});
+				} else {
+					layer.alert(json.msg, {icon:5});
+				}
+			});	
+		});
+		
+		//加载历史保存的数据文件到页面展示
+		$(document.body).delegate(".load-this-file", "click", function(){
+			$.post("server/getFileInfo", {filePath:$(this).attr("data-path")}, function(json){
+				json = JSON.parse(json);
+				if (json.returnCode == 0) {
+					reloadTableView(JSON.parse(json.infos));
+					layer.closeAll('page');					
+					$("#infosData").val('')
+					layer.msg("加载成功!", {icon:1, time:1500});
+				} else {
+					layer.alert(json.msg, {icon:5});
+				}
+								
+			});
+			
+		});
+		
 		//按钮控制显示视图
 		form.on('checkbox(view)', function (data) {
 			var type = $(data.elem).attr('data-column');
@@ -642,6 +670,8 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 			layer.open({
 				type:1,
 	    		title:"选择数据",
+	    		shadeClose:true,
+				anim:5,
 	    		content:html,
 	    		area: ['800px', '600px'],
 	    		success:function() {
@@ -693,6 +723,8 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 			    		title:"查看结果-全部复制可直接粘贴到Excel表格中",
 			    		content:'<div id="analyze-result-data-view"></div>',
 			    		area: ['900px', '680px'],
+			    		shadeClose:true,
+						anim:5,
 			    		success:function(layero, index) {
 			    			$(layero).find('#analyze-result-data-view').append(htmlLinux).append(htmlWebloigc).append(htmlJvm);
 			    		}
@@ -704,6 +736,26 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 		});
 		
 /////////////////////////////////公共方法///////////////////////////////////////////////////////////////////////////
+		//重新加载数据到页面
+		function reloadTableView (infos) {
+			if (infos != null) {
+				dates = infos.dates;
+				serverInfos = infos.serverInfos;
+				serverList = infos.serverList;
+
+				$.each(returnObject, function(type, obj) {
+					(obj.table).destroy();
+				});
+				linuxTableSetting.dtParams.data = infos.serverList.linux;
+				returnObject.linux = serverDynamicResourceView(linuxTableSetting);
+				weblogicTableSetting.dtParams.data = infos.serverList.weblogic;
+				returnObject.weblogic = serverDynamicResourceView(weblogicTableSetting);
+				JVMTableSetting.dtParams.data = infos.serverList.jvm;
+				returnObject.jvm = serverDynamicResourceView(JVMTableSetting);
+			}
+		}
+		
+		
 		handleFiles = function (files)
 		{
 			if(files.length)
@@ -713,21 +765,7 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 				reader.onload = function()
 				{
 					infos = JSON.parse(this.result);
-					if (infos != null) {
-						dates = infos.dates;
-						serverInfos = infos.serverInfos;
-						serverList = infos.serverList;
-
-						$.each(returnObject, function(type, obj) {
-							(obj.table).destroy();
-						});
-						linuxTableSetting.dtParams.data = infos.serverList.linux;
-						returnObject.linux = serverDynamicResourceView(linuxTableSetting);
-						weblogicTableSetting.dtParams.data = infos.serverList.weblogic;
-						returnObject.weblogic = serverDynamicResourceView(weblogicTableSetting);
-						JVMTableSetting.dtParams.data = infos.serverList.jvm;
-						returnObject.jvm = serverDynamicResourceView(JVMTableSetting);
-					}
+					reloadTableView(infos);
 				};
 				reader.readAsText(file);
 			}
@@ -812,7 +850,7 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 				show: true,
 				feature: {
 					dataView: {readOnly: true}, //数据视图
-					saveAsImage: {},// 保存为图片
+					saveAsImage: {}// 保存为图片
 				}
 			};
 
@@ -821,7 +859,7 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 				type: 'category',
 				boundaryGap: false,
 				data: date,// X轴的定义
-				axisLine: {onZero: false},
+				axisLine: {onZero: false}
 			};
 			//y轴定义
 			option.yAxis = {
@@ -868,6 +906,8 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 			layer.open({
 				type: 1,
 				title: title,
+				shadeClose:true,
+				anim:5,
 				content: '<div class="open-echarts" id="thisId"></div>',
 				area: ['880px', '460px'],
 				success:function(){

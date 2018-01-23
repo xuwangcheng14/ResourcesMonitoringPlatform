@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import xuwangcheng.love.w.servlet.AbstractHttpServlet;
 import xuwangcheng.love.w.servlet.annotation.ExecuteRequest;

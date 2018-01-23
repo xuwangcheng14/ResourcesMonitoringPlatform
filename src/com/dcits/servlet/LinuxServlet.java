@@ -64,15 +64,15 @@ public class LinuxServlet extends AbstractHttpServlet {
 		
 	/*此方法需要更改：执行命令时生成一个唯一标识返回给前台，强制停止时也需要验证此标识，防止不同用户同时执行命令影响*/
 	@ExecuteRequest
-	public void stopExec(Map<String, Object> ajaxData, HttpServletRequest request) {
-		ServletUtil.getContext().setAttribute(LinuxConstant.STOP_EXEC_COMMAND_FLAG_ATTRIBUTE, "true");
+	public void stopExec(Map<String, Object> ajaxData, HttpServletRequest request, @RequestBody("tag")String tag) {
+		ServletUtil.getContext().setAttribute(tag, "true");
 		ajaxData.put("returnCode", LinuxConstant.CORRECT_RETURN_CODE);
 	}
 	
 	@ExecuteRequest
 	public void execCommand(Map<String, Object> ajaxData, HttpServletRequest request
 			, @RequestBody("id") Integer id, @RequestBody("command")String command
-			, @RequestBody("userKey")String userKey) {				
+			, @RequestBody("userKey")String userKey, @RequestBody("tag")String tag) {				
 		
 		if (StringUtils.isEmpty(command)) {
 			ajaxData.put("msg", "执行命令不能为空!");
@@ -99,7 +99,11 @@ public class LinuxServlet extends AbstractHttpServlet {
 		}
 			
 		try {
-			String returnInfo = GetLinuxInfoUtil.execCommand(info.getConn(), command, 9999999, ServletUtil.getContext(), 2);
+			long begin = System.currentTimeMillis();
+			String returnInfo = GetLinuxInfoUtil.execCommand(info.getConn(), command, 9999999, ServletUtil.getContext(), 2, tag);
+			long end = System.currentTimeMillis();
+						
+			ajaxData.put("useTime", end - begin);
 			ajaxData.put("returnInfo", returnInfo);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

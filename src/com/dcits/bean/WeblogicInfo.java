@@ -110,6 +110,7 @@ public class WeblogicInfo extends ServerInfo{
 		this.time = DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN);
 		this.parameters = serverInfo.parameters;
 		this.tags = serverInfo.tags;
+		this.realHost = serverInfo.realHost;
 	}
 	
 	public WeblogicInfo() {

@@ -13,7 +13,7 @@ var CONSTANT = {
             "language": {
                 "url": "libs/zh_CN.json"
             },
-            "lengthMenu": [[100], ['100']],  //显示数量设置
+            "lengthMenu": [[100], ['100']]  //显示数量设置
             },
             //常用的COLUMN
 			COLUMNFUN:{

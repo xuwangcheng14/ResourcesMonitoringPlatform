@@ -55,7 +55,7 @@ public class JvmInfo extends LinuxInfo {
 		String execCommand = "netstat -anp|grep java|grep LISTEN|grep " + this.weblogicPort + "|head -1";
 		try {
 			this.conect();
-			pid = GetLinuxInfoUtil.execCommand(this.conn, execCommand, 1, null, 0);			
+			pid = GetLinuxInfoUtil.execCommand(this.conn, execCommand, 1, null, 0, "");			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -113,7 +113,7 @@ public class JvmInfo extends LinuxInfo {
 		
 		//检测命令是否可用或者pid的java进程是否存在
 		
-		String returnStr = GetLinuxInfoUtil.execCommand(this.conn, this.javaHome + "/jstat -gcutil " + this.pid, 1, null, 0);
+		String returnStr = GetLinuxInfoUtil.execCommand(this.conn, this.javaHome + "/jstat -gcutil " + this.pid, 1, null, 0, "");
 		
 		if (StringUtils.isEmpty(returnStr)) {
 			this.errorInfo = "执行jstat命令发生错误：请检查JAVA_HOME、主机环境以及PID是否正确.[execCommand=" + this.javaHome + "/jstat -gcutil " + this.pid + "]";
@@ -139,7 +139,7 @@ public class JvmInfo extends LinuxInfo {
 		String str = null;
 		if (this.conn != null) {
 			try {
-				str = GetLinuxInfoUtil.execCommand(this.conn, this.javaHome + "/jstack " + this.pid, 9999999, null, 2);
+				str = GetLinuxInfoUtil.execCommand(this.conn, this.javaHome + "/jstack " + this.pid, 9999999, null, 2, "");
 				
 				return str;
 			} catch (Exception e) {

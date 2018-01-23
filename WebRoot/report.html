@@ -44,7 +44,8 @@
                 <button class="layui-btn layui-btn-normal layui-btn-small" show-type="views">视图显示</button>&nbsp;&nbsp;&nbsp;
                 <span style="margin-right:15px;">
                 	<button class="layui-btn layui-btn-small" onclick="window.open('./report1.html')">离线工具下载</button>
-					<button class="layui-btn layui-btn-small" id="to-analyze-data">数据分析</button>              
+					<button class="layui-btn layui-btn-small" id="to-analyze-data">数据分析</button>  
+					<button class="layui-btn layui-btn-small" id="history-info-files">历史数据</button>              
                 </span>
                 <input type="file" name="infosData" id="infosData" onchange="handleFiles(this.files)">
             </div>
@@ -312,6 +313,37 @@
 </div>
 </script>
 
+<!-- history-files-table -->
+<script id="history-files-table" type="text/html">
+		<button id="refresh-history-table" class="layui-btn layui-btn-small" style="margin:6px 20px 6px 0px;float:right;"><i class="layui-icon">&#x1002;</i></button>
+		<table class="layui-table" lay-skin="line row" style="margin:2px 20px 20px 20px;width:840px;">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>文件</th>
+				<th>服务器数量</th>
+				<th>导出时间</th>
+				<th>记录数</th>
+				<th>文件大小</th>	
+				<th>操作</th>						  
+			</tr>
+		</thead>
+		<tbody>	
+			{{#  $.each(d, function(i, fileInfo){ }}
+			<tr>
+			<td>{{ fileInfo.exportId }}</td>
+			<td><a href="./{{ fileInfo.filePath }}" target="_blank">{{ fileInfo.fileName }}</a></td>
+			<td>{{ fileInfo.serverCount }}</td>
+			<td>{{ fileInfo.exportTime }}</td>
+			<td>{{ fileInfo.recordCount }}</td>
+			<td>{{ fileInfo.fileSize }}</td>
+			<td><button class="layui-btn layui-btn-small layui-btn-danger load-this-file" data-path="{{fileInfo.filePath}}">加载</button></td>
+			</tr>
+			{{#  }); }} 
+		</tbody>
+		</table>
+</script>
+
 <!-- analyze-result-table -->
 <script id="analyze-result-table" type="text/html">
 	<table class="layui-table" style="margin:18px;">
@@ -363,6 +395,7 @@
 <script src="libs/datatables/js/jquery.dataTables.min.js"></script>
 <script src="libs/Echarts/echarts.min.js"></script>
 <script src="libs/Echarts/shine.js"></script>
+<script src="js/global.js"></script>
 <script src="js/report.js"></script>
 </body>
 </html>

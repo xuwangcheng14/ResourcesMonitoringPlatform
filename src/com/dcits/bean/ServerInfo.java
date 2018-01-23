@@ -19,6 +19,11 @@ public class ServerInfo {
 	
 	protected String host;
 	
+	/**
+	 * 真实的地址，当通过端口转发连接时需要填写
+	 */
+	protected String realHost;
+	
 	protected String port;
 	protected String username;
 	protected String password;
@@ -66,6 +71,14 @@ public class ServerInfo {
 		// TODO Auto-generated constructor stub
 	}
 	
+	
+	public String getRealHost() {
+		return realHost;
+	}
+	
+	public void setRealHost(String realHost) {
+		this.realHost = realHost;
+	}
 	
 	public void setTags(String tags) {
 		this.tags = tags;

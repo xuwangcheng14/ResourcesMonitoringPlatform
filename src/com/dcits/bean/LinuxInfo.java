@@ -11,7 +11,7 @@ import ch.ethz.ssh2.Connection;
 import com.dcits.bean.linux.RealTimeInfo;
 import com.dcits.util.DcitsUtil;
 import com.dcits.util.ServletUtil;
-import com.dcits.util.linux.GetLinuxInfo2;
+import com.dcits.util.linux.GetLinuxInfo;
 import com.dcits.util.linux.GetLinuxInfoUtil;
 
 /**
@@ -90,7 +90,7 @@ public class LinuxInfo extends ServerInfo {
 				try {
 					while (!stopFlag) {
 						Thread.sleep(5000);
-						GetLinuxInfo2.getRealTimeInfo(l);
+						GetLinuxInfo.getRealTimeInfo(l);
 					}				
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -140,14 +140,14 @@ public class LinuxInfo extends ServerInfo {
 	 * 获取实时信息
 	 */
 	public void setInfo() {		
-		GetLinuxInfo2.getRealTimeInfo(this);
+		GetLinuxInfo.getRealTimeInfo(this);
 	}
 	
 	public String jpsShow () {
 		String processNames = null;
 		if (this.conn != null) {
 			try {
-				processNames = GetLinuxInfoUtil.execCommand(this.conn, this.javaHome + "/jps|grep -vi jps", 100, null, 0);				
+				processNames = GetLinuxInfoUtil.execCommand(this.conn, this.javaHome + "/jps|grep -vi jps", 100, null, 0, "");				
 				
 				if (!processNames.contains("command not found")) {
 					return processNames;					
@@ -183,7 +183,7 @@ public class LinuxInfo extends ServerInfo {
 						
 		if ("root".equalsIgnoreCase(this.username)) {
 			try {
-				home = GetLinuxInfoUtil.execCommand(this.conn, "find / -name jps|sed -n '1p'", 1, null, 0);
+				home = GetLinuxInfoUtil.execCommand(this.conn, "find / -name jps|sed -n '1p'", 1, null, 0, "");
 				if (StringUtils.isNotEmpty(home)) {
 					home = home.substring(0, home.lastIndexOf("/"));
 				}
@@ -233,6 +233,7 @@ public class LinuxInfo extends ServerInfo {
 		this.parameters = serverInfo.parameters;
 		this.time = DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN);
 		this.tags = serverInfo.tags;
+		this.realHost = serverInfo.realHost;
 	}
 	
 	public LinuxInfo() {

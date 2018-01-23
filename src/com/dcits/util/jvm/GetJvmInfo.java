@@ -12,7 +12,7 @@ public class GetJvmInfo {
 	public static void getRealTimeInfo (JvmInfo info) throws Exception {
 		String str ;
 		try {
-			str = GetLinuxInfoUtil.execCommand(info.getConn(), info.getJavaHome() + "/jstat -gcutil " + info.getPid(), 5, null, 0);
+			str = GetLinuxInfoUtil.execCommand(info.getConn(), info.getJavaHome() + "/jstat -gcutil " + info.getPid(), 5, null, 0, "");
 			parseInfo(info, str);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

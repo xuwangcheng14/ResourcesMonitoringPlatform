@@ -59,7 +59,8 @@
 								<tr>
 								  <th><input type="checkbox"></th>
 								  <th>#</th>
-								  <th>HOST</th>								  
+								  <th>HOST</th>
+								  <th>REAL_HOST</th>								  								  
 								  <th>用户名</th>
 								  <th>密码</th>
 								  <th>类型</th>
@@ -121,6 +122,12 @@
 			    </div>
 			  </div>
 			  <div class="layui-form-item">
+			    <label class="layui-form-label">真实HOST</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="realHost" id="realHost" autocomplete="off" class="layui-input" placeholder="如果使用了端口转发，请输入该服务器真实的IP地址">
+			    </div>
+			  </div>
+			  <div class="layui-form-item">
 			    <label class="layui-form-label">端口号</label>
 			    <div class="layui-input-block">
 			      <input type="text" name="port" id="port" placeholder="Linux默认为22可不填写,其他类型需要填写" autocomplete="off" class="layui-input">
@@ -144,7 +151,7 @@
 			  <div class="layui-form-item">
 			    <label class="layui-form-label">备注</label>
 			    <div class="layui-input-block">
-			      <input type="text" name="mark" id="mark" placeholder="如果通过端口转发设置，请备注真实服务器地址" autocomplete="off" class="layui-input">
+			      <input type="text" name="mark" id="mark" placeholder="备注可以帮你更快的识别不同的服务器" autocomplete="off" class="layui-input">
 			    </div>
 			  </div>
 			  <div class="layui-form-item">

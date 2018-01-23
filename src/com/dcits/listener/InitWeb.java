@@ -28,6 +28,7 @@ public class InitWeb extends LovewInitListener {
 		arg0.getServletContext().setAttribute("userSpaces", new HashMap<String, UserSpace>());
 		ServletUtil.setContext(arg0.getServletContext());
 		
+		
 		/*WeblogicInfo info1 = new WeblogicInfo(1, "127.0.0.1", "7001", "weblogic", "12345678", "", "");
 		WeblogicInfo info2 = new WeblogicInfo(2, "127.0.0.1", "7001", "weblogic", "12345678", "", "");
 		WeblogicInfo info3 = new WeblogicInfo(3, "127.0.0.1", "7001", "weblogic", "12345678", "", "");

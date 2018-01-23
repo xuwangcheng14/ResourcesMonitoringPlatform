@@ -5,7 +5,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Formatter;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.management.MBeanServerConnection;
@@ -86,7 +85,19 @@ public class DcitsUtil {
 	 */
 	public static String byteToMB(long bytes) {
 	    double mb = (double) bytes / 1024 / 1024;
-	    DecimalFormat df = new DecimalFormat("#.00");
+	    DecimalFormat df = new DecimalFormat("0.00");
+	    return df.format(mb);
+	}
+	
+	/**
+	 * 字节转换成KB
+	 * 
+	 * @param bytes
+	 * @return
+	 */
+	public static String byteToKB(long bytes) {
+	    double mb = (double) bytes / 1024;
+	    DecimalFormat df = new DecimalFormat("0.00");
 	    return df.format(mb);
 	}
 	

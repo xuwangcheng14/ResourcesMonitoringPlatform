@@ -9,6 +9,9 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
@@ -28,6 +31,8 @@ import com.dcits.util.DcitsUtil;
 
 public class GetLinuxInfoUtil {		
 	
+	private static final Logger LOGGER = Logger.getLogger(GetLinuxInfoUtil.class);
+	
 	/**
 	 * 获取指定主机的连接
 	 * @param host
@@ -46,7 +51,7 @@ public class GetLinuxInfoUtil {
 		
 		if (flag) {
 			if (info.getUanme() == "") {
-				info.setUanme(execCommand(conn, CommandConstant.LINUX_COMMAND_MAP.get(CommandConstant.GET_UNAME), 1, null, 0));
+				info.setUanme(execCommand(conn, CommandConstant.LINUX_COMMAND_MAP.get(CommandConstant.GET_UNAME), 1, null, 0, ""));
 				
 				switch (info.getUanme()) {
 				case "Linux":
@@ -63,9 +68,9 @@ public class GetLinuxInfoUtil {
 					break;
 				}
 				
-				info.setCpuInfo(execCommand(conn, info.getCommandMap().get(CommandConstant.GET_CPU_INFO), 1, null, 0));	
-				info.setMemInfo(execCommand(conn, info.getCommandMap().get(CommandConstant.GET_MEMORY_INFO), 1, null, 0));
-				String str = execCommand(conn, info.getCommandMap().get(CommandConstant.GET_NETWORK_CARD), 1, null, 0);
+				info.setCpuInfo(execCommand(conn, info.getCommandMap().get(CommandConstant.GET_CPU_INFO), 1, null, 0, ""));	
+				info.setMemInfo(execCommand(conn, info.getCommandMap().get(CommandConstant.GET_MEMORY_INFO), 1, null, 0, ""));
+				String str = execCommand(conn, info.getCommandMap().get(CommandConstant.GET_NETWORK_CARD), 1, null, 0, "");
 				info.setNewWorkInfo(str.split(","));
 			}			
 			info.setConn(conn);
@@ -114,12 +119,15 @@ public class GetLinuxInfoUtil {
 	 * @param command
 	 * @param count 读取多少行,从第一行开始读取
 	 * @param context 从context中读取是否中断命令的flag
-	 * @param getMode 返回模式，0-只返回正确的输出 1-只返回错误的信息 2-返回所有的信息
+	 * @param getMode 返回模式，0-只返回正确的输出 1-只返回错误的信息 2-返回所有的信息<br>mode=2时将会使用终端模式
+	 * @param tag 标记,防止中断命令时在并发情况下出现混乱
 	 * @return
 	 * @throws Exception 
 	 * @throws IOException 
 	 */
-	public static String execCommand(Connection conn, String command, int count, ServletContext context, int getMode) throws Exception {
+	public static String execCommand(Connection conn, String command, int count, ServletContext context, int getMode, String tag) throws Exception {
+		
+		LOGGER.info("begin exec Commond:" + command);
 		
 		String str = "";
 		
@@ -146,7 +154,8 @@ public class GetLinuxInfoUtil {
 
 				String readLine = null;
 				int i = 0;
-				while (i < count && (readLine = brStat.readLine()) != null) {
+				while (i < count && (readLine = brStat.readLine()) != null) {					
+					
 					str += readLine;
 					
 					i++;
@@ -154,9 +163,9 @@ public class GetLinuxInfoUtil {
 					if (i != count ) {
 						str += "\n";
 					}
-					
-					if (context != null && "true".equals(context.getAttribute(LinuxConstant.STOP_EXEC_COMMAND_FLAG_ATTRIBUTE))) {
-						context.setAttribute(LinuxConstant.STOP_EXEC_COMMAND_FLAG_ATTRIBUTE, "false");
+					//判断是否有中断命令
+					if (context != null && "true".equals(StringUtils.isEmpty(tag) ? "false" : context.getAttribute(tag))) {
+						context.removeAttribute(tag);
 						break;
 					}
 				}				
@@ -188,7 +197,7 @@ public class GetLinuxInfoUtil {
 				
 			}			
 		}
-		
+		LOGGER.info("end exec Commond,result=\n" + str);
 		return str;
 	}
 

@@ -69,6 +69,7 @@ public class TomcatInfo extends ServerInfo {
 		this.mark = serverInfo.mark;
 		this.time = DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN);
 		this.parameters = serverInfo.parameters;
+		this.realHost = serverInfo.realHost;
 	}
 	
 	public TomcatInfo() {

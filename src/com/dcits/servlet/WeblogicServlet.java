@@ -257,7 +257,7 @@ public class WeblogicServlet extends AbstractHttpServlet {
 		//先从列表中删除该weblogic
 		space.getWeblogicInfos().remove(info);
 		try {
-			killMsg = GetLinuxInfoUtil.execCommand(jvmInfo.getConn(), "kill -9 " + jvmInfo.getPid(), 1, null, 1);
+			killMsg = GetLinuxInfoUtil.execCommand(jvmInfo.getConn(), "kill -9 " + jvmInfo.getPid(), 1, null, 1, "");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -280,7 +280,7 @@ public class WeblogicServlet extends AbstractHttpServlet {
 		
 		String msg = "";
 		try {
-			GetLinuxInfoUtil.execCommand(jvmInfo.getConn(), "sh " + scriptPath, 99, null, 2);
+			GetLinuxInfoUtil.execCommand(jvmInfo.getConn(), "source /etc/profile;source ~/.bash_profile;sh " + scriptPath, 99, null, 2, "");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

@@ -2,6 +2,8 @@ package com.dcits.util.linux.parse;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.dcits.bean.linux.RealTimeInfo;
 
 public class ParseInfoLinux extends ParseInfo{
@@ -9,8 +11,10 @@ public class ParseInfoLinux extends ParseInfo{
 	@Override
 	public void parseNetworkInfo(String info, RealTimeInfo realTimeInfo) {
 		// TODO Auto-generated method stub
+		LOGGER.info("Linux Parse network info:\n" + info);
+		
 		Map<String, String> map = realTimeInfo.getNetworkInfo();
-		if (info != null && !info.isEmpty()) {
+		if (StringUtils.isNotEmpty(info)) {
 			double rx = 0, tx = 0;
 			String[] strs = info.split(",");
 			String[] ss = null;

@@ -1,5 +1,5 @@
 //用于更新用户本地浏览器的缓存配置信息
-platformVersion = "v2.1";
+var platformVersion = "v2.1";
 
 //批量操作工具html
 var utilPageHtml = "";
@@ -196,7 +196,7 @@ var propertyObject = {
 			fullGCTotalCount:[],
 			fullGCTime:[],
 			GCTotalTime:[]
-		},		
+		}		
 	}
 	
 };
@@ -213,6 +213,7 @@ var otherSetting = {
 		playNoticIntervalTime:5000, //预警公告刷新时间间隔
 		maxInfoDataCount:20000,  //最大缓存数据的条数
 		autoClearDataFlag:false,  //自动清理本地缓存数据
+		autoExportDataFlag:false, //自动导出数据
 		infoCount:0,//缓存数据条数计数
 		alertMonitorIntervalTime:8000,//预警监控循环时间
 		cacheDataDetection:30000 //缓存数据检测循环时间
@@ -281,6 +282,8 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         	layer.open({
 				type:1,
 	    		title:"预警信息查看",
+	    		shadeClose:true,
+	    		anim:5,
 	    		content:alertTableTpl.render(alertInfo),
 	    		area: ['800px', '600px']
         	});
@@ -657,7 +660,7 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
                              			return data.host + ":" + data.port;
                           	   }
                              },{
-                          	   "data":"mark",
+                          	   "data":"mark"
                              },{
                           	   "data":"username",
                           	   "visible": false
@@ -805,7 +808,9 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
             		var html = userKeysTpl.render(json.data);
         			layer.open({
         				type:1,
+        				anim:5,
         	    		title:"userKey列表",
+        	    		shadeClose:true,
         	    		content:html,
         	    		area: ['800px', '500px']
         			});
@@ -848,10 +853,11 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         //更新其他设置
         form.on('submit(other-setting)', function(data) {
         	otherSetting["autoClearDataFlag"] = false;
+        	otherSetting["autoExportDataFlag"] = false;
         	$.each(data.field, function(key, value) {
         		otherSetting[key] = value;
-        		if (key == "autoClearDataFlag") {
-        			otherSetting[key] = true;
+        		if (key == "autoClearDataFlag" || key == "autoExportDataFlag") {
+        			otherSetting[key] = true;       			
         		}      		
         	});
         	layer.msg('更新成功!', {icon:1, time:1500});
@@ -865,7 +871,7 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         	'.util-page-btn > button:eq(1)':reclock, //重新计时
         	'.util-page-btn > button:eq(2)':stopRefreshTable, //停止刷新
         	'.util-page-btn > button:eq(3)':startRefreshTable, //开始刷新
-        	'.util-page-btn > button:eq(4)':exportData,
+        	'.util-page-btn > button:eq(4)':function () {exportData(false)},
         	"#refresh-alert-table":function() {
         		$(this).parents(".layui-layer-content").html(alertTableTpl.render(alertInfo));
         		layer.msg("刷新成功!", {icon:1, time:1500});
@@ -887,17 +893,20 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         			$("#exec-command-tips").text("正在请求执行命令,请稍等/");
         			execCommandTip();
         			execTipIntervalId = setInterval(execCommandTip, 1000);
-        			$.post("linux/execCommand", {id:serverId, command:command, userKey:userKey}, function(json) {  
+        			//带上一个标记,防止中断命令时的并发冲突
+        			var tag = "" + Date.parse(new Date()) + userKey;
+        			$("#exec-command-tag").val(tag);
+        			$.post("linux/execCommand", {id:serverId, command:command, userKey:userKey, tag:tag}, function(json) {  
         				clearInterval(execTipIntervalId);
         				
         				json = JSON.parse(json);
         				       				
         				hasExecCommand = false;
             			execWaittingCount = 1;
-            			
+            			$("#exec-command-tag").val('');
             			if (json.returnCode == 0) {
-            				$("#returnInfo").val(json.returnInfo);    
-            				$("#exec-command-tips").text("命令执行成功!");
+            				$("#returnInfo").val(json.returnInfo);             				
+            				$("#exec-command-tips").text("命令执行成功!  耗时:" + json.useTime + "ms.");
             			} else {           				            				
             				$("#exec-command-tips").text("命令执行失败:" + json.msg);
             			}            			
@@ -907,10 +916,10 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         		}       		
         	},
         	'#exec-command-util input[type="button"]:eq(1)':function() { //中断执行命令
-        		if (!hasExecCommand) {
+        		if (!hasExecCommand || $("#exec-command-tag").val() == "") {
         			return false;
         		}
-        		$.get("linux/stopExec?userKey=" + userKey, function(json) {
+        		$.post("linux/stopExec?userKey=" + userKey, {tag:$("#exec-command-tag").val()}, function(json) {
         			json = JSON.parse(json);
         			if (json.returnCode == 0) {
         				layer.msg("已发送中断命令请求,请稍后!", {icon:1, time:1500});
@@ -947,7 +956,6 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         		});        		
         	},
         	'#weblogic button:eq(0)':function() { //批量重启weblogic
-        		return false;
         		var checkboxList = $("#weblogic .weblogic-server:checked");
         		if (checkboxList.length < 1) {
 					return;
@@ -958,6 +966,8 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         			layer.open({
         				type:1,
         				title:"webogic重启日志",
+        				anim:5,
+        				shadeClose:true,
         	    		content:'<div style="padding:18px;" id="weblogic-reboot-logs"></div>',
         	    		area: ['800px', '600px'],
         	    		success:function(layero, index) {
@@ -1000,6 +1010,8 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         			layer.open({
         				type:1,
         	    		title:"linux-命令控制台",
+        	    		anim:5,
+        	    		shadeClose:true,
         	    		content:linuxExecCommandHtml,
         	    		area: ['800px', '600px'],
         	    		success:function(layero, index) {
@@ -1011,8 +1023,8 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         						}
         						
         						serverListHtml += '<option value="' + n.id + '">';
-        						if (n.mark != "" && n.mark != null) {
-        							serverListHtml += n.mark;
+        						if (n.realHost != "" && n.realHost != null) {
+        							serverListHtml += n.realHost;
         						} else {
         							serverListHtml += n.host + ':' + n.port;
         						}
@@ -1026,6 +1038,14 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         					form.on('select(select-linux-server)', function(data){
         						  $("#command-server-list #serverId").val(data.value);
         					}); 
+        					
+        					//回车键执行命令       					
+	    					 layero.keyup(function (event) {
+								 var keycode = event.which;
+								 if(keycode==13){
+									 $('#exec-command-util input[type="button"]:eq(0)').click();
+								 }
+	    					 });
         	    		},
         	    		cancel:function() {
         	    			hasExecCommand = false;
@@ -1038,9 +1058,15 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
         	});
         });
         
-        //每隔30s检测当前缓存中的数据数量，超过最大值弹窗提示
+        //每隔30s时间检测当前缓存中的数据数量，超过最大值弹窗提示
         setInterval(function() {
         	if (otherSetting.infoCount >= Number(otherSetting.maxInfoDataCount)) {
+        		//需要自动保存
+        		if (Boolean(otherSetting.autoExportDataFlag)) {
+        			exportData(true);
+        		}
+        		
+        		//需要自动清理
         		if (Boolean(otherSetting.autoClearDataFlag)) {
         			//自动清理
             		currentTypeName = "all";
@@ -1183,7 +1209,7 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 			show: true,
 	        feature: {
 	        	dataView: {readOnly: true}, //数据视图
-	            saveAsImage:{},// 保存为图片				        	
+	            saveAsImage:{}// 保存为图片				        	
 	        }	
     	};
     	
@@ -1192,7 +1218,7 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
 	            type : 'category',
 	            boundaryGap: false,
 	            data : date,// X轴的定义
-	            axisLine: {onZero: false},
+	            axisLine: {onZero: false}
 	        };
     	//y轴定义
     	option.yAxis = {
@@ -1286,6 +1312,8 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
     	layer.open({
     		type:1,
     		title:title,
+    		anim:5,
+    		shadeClose:true,
     		content:'<div class="open-echarts" id="thisId"></div>',
     		area: ['880px', '460px'],
     		success:function(){
@@ -1470,6 +1498,8 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
     	layer.open({
     			type:1,
     			title:"批量操作工具",
+    			anim:5,
+    			shadeClose:true,
     			content:utilPageHtml,
     			area: ['600px', '400px'],
     			//shadeClose:true,
@@ -1482,20 +1512,26 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
     }
     
     //导出数据
-    function exportData() {
-    	var loadIndex = layer.msg('正在导出当前时间段的数据...', {icon:16, time:60000, shade:0.35});
+    function exportData(autoFlag) {
+    	var loadIndex;
+    	if (!autoFlag) {
+    		loadIndex = layer.msg('正在导出当前时间段的数据...', {icon:16, time:60000, shade:0.35});
+    	}    	
     	$.post("server/exportData", {
     		"dates":JSON.stringify(dates),
     		"serverInfos":JSON.stringify(serverInfos),
+    		"recordCount":otherSetting.infoCount,
     		"userKey":userKey
     	}, function(json) {
-    		layer.close(loadIndex);
-    		json = JSON.parse(json);
-    		if (json.returnCode == 0) {
-    			$(".util-page-tips").append('<p>导出成功,请右键另存为保存到本地：<a href="' + json.filePath + '" target="_blank">infos.json</a></p>');
-    		} else {
-    			layer.alert(json.msg, {icon:5});
-    		}
+    		if (!autoFlag) {
+    			layer.close(loadIndex);
+	    		json = JSON.parse(json);
+	    		if (json.returnCode == 0) {
+	    			$(".util-page-tips").append('<p>导出成功,请右键另存为保存到本地：<a href="' + json.filePath + '" target="_blank">infos.json</a></p>');
+	    		} else {
+	    			layer.alert(json.msg, {icon:5});
+	    		}
+    		}   		
     	});
     }
     
@@ -1619,6 +1655,12 @@ layui.use(['element', 'layer', 'form', 'util', 'laytpl'], function () {
     	if ($("#other-setting input[name='autoClearDataFlag']")) {
     		if (otherSetting.autoClearDataFlag) {
     			$("#other-setting input[name='autoClearDataFlag']").prop('checked', true);
+    		}
+    	}
+    	
+    	if ($("#other-setting input[name='autoExportDataFlag']")) {
+    		if (otherSetting.autoExportDataFlag) {
+    			$("#other-setting input[name='autoExportDataFlag']").prop('checked', true);
     		}
     	}
     }
@@ -1754,6 +1796,8 @@ function getJvm(id,host,mark) {
 	layer.open(
 			{
     			type:1,
+    			shadeClose:true,
+    			anim:5,
     			title:"启动jvm监控[" + host + "]",
     			content:jvmMonitorStartHtml,
     			area: ['600px', '460px'],

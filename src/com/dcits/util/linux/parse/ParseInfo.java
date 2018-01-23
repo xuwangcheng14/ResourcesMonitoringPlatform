@@ -4,6 +4,8 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.dcits.bean.LinuxInfo;
 import com.dcits.bean.linux.RealTimeInfo;
 
@@ -14,6 +16,9 @@ import com.dcits.bean.linux.RealTimeInfo;
  *
  */
 public abstract class ParseInfo {
+	
+	protected static final Logger LOGGER = Logger.getLogger(ParseInfo.class);
+	
 	/**
 	 * 解析vmstat返回的信息<br>
 	 * 不同类型的主机可能都可以执行vmstat,但是返回的格式可能不相同<br>
@@ -21,9 +26,9 @@ public abstract class ParseInfo {
 	 * @param info
 	 * @param realTimeInfo
 	 * @return null
-	 */
-	
+	 */	
 	public void parseInfo(String info, LinuxInfo linuxInfo){
+		LOGGER.info("Common Parse vmstat info:\n" + info);
 		
 		if ("".equals(info)) {
 			return;
@@ -90,6 +95,8 @@ public abstract class ParseInfo {
 	 * @return
 	 */
 	public void parseTcpInfo(String info, RealTimeInfo realTimeInfo) {
+		LOGGER.info("Common Parse tcp info:\n" + info);
+		
 		Map<String, String> map = realTimeInfo.getTcpInfo();		
 		
 		if (info != null && !info.isEmpty()) {
@@ -118,6 +125,8 @@ public abstract class ParseInfo {
 	 * @param realTimeInfo
 	 */
 	public void parseDiskInfo(String info, RealTimeInfo realTimeInfo) {
+		LOGGER.info("Common Parse disk info:\n" + info);
+		
 		Map<String, String> map = realTimeInfo.getDiskInfo();
 		if (info != null && !info.isEmpty()) {
 			String[] strs = info.split(",");

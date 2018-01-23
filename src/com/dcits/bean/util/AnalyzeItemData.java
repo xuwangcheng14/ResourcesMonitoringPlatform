@@ -2,6 +2,8 @@ package com.dcits.bean.util;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 public class AnalyzeItemData {
 	
 	private String itemName;
@@ -13,11 +15,19 @@ public class AnalyzeItemData {
 		if (datas == null) {
 			return;
 		}
+		double max = 0.00;
+		double min = 0.00;
+		if (StringUtils.isNotBlank(datas.get(0))) {
+			max = Double.parseDouble(datas.get(0));
+			min = Double.parseDouble(datas.get(0));
+		}
 		
-		double max = Double.parseDouble(datas.get(0));
-		double min = Double.parseDouble(datas.get(0));
 		double avg = 0;
 		for (int i = 0;i < datas.size();i++) {
+			if (StringUtils.isBlank(datas.get(i))) {
+				continue;
+			}
+			
 			if (max < Double.parseDouble(datas.get(i))) {
 				max = Double.parseDouble(datas.get(i));
 			}

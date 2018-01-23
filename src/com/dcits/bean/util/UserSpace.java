@@ -25,6 +25,8 @@ public class UserSpace {
 	private List<LinuxInfo> linuxInfos = new ArrayList<LinuxInfo>();
 	private List<WeblogicInfo> weblogicInfos = new ArrayList<WeblogicInfo>();
 	private List<JvmInfo> jvmInfos = new ArrayList<JvmInfo>();
+	private List<ExportFileInfo> exportFileInfos = new ArrayList<ExportFileInfo>();
+	
 	private String createTime = DcitsUtil.getCurrentTime(DcitsUtil.FULL_DATE_PATTERN);
 	
 		
@@ -45,7 +47,7 @@ public class UserSpace {
 	
 	public WeblogicInfo getWeblogicInfo(Integer id) {
 		for (WeblogicInfo info:this.weblogicInfos) {
-			if (info.getId() == id) {
+			if (info.getId().equals(id)) {
 				return info;
 			}
 		}
@@ -54,7 +56,7 @@ public class UserSpace {
 	
 	public LinuxInfo getLinuxInfo(Integer id) {
 		for (LinuxInfo info:this.linuxInfos) {
-			if (info.getId() == id) {
+			if (info.getId().equals(id)) {
 				return info;
 			}
 		}
@@ -63,13 +65,21 @@ public class UserSpace {
 	
 	public JvmInfo getJvmInfo(Integer id) {
 		for (JvmInfo info:this.jvmInfos) {
-			if (info.getId() == id) {
+			if (info.getId().equals(id)) {
 				return info;
 			}
 		}
 		return null;
 	}
 	
+	public ExportFileInfo getExportFileInfo (Integer id) {
+		for (ExportFileInfo info:this.exportFileInfos) {
+			if (info.getExportId().equals(id)) {
+				return info;
+			}
+		}
+		return null;
+	}
 	
 	public void updateParameters(ServerInfo info) {
 		ServletUtil.updateParameter(info, new ArrayList<ServerInfo>(this.linuxInfos));
@@ -106,6 +116,15 @@ public class UserSpace {
 	}
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
+	}
+
+	public List<ExportFileInfo> getExportFileInfos() {
+		return exportFileInfos;
+	}
+
+	public void setExportFileInfos(List<ExportFileInfo> exportFileInfos) {
+		this.exportFileInfos = exportFileInfos;
 	}	
+	
 	
 }

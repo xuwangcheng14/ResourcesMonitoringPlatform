@@ -40,7 +40,7 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
     	table = $(".layui-table").DataTable(
     			$.extend(true, {}, CONSTANT.DATA_TABLES.DEFAULT_OPTION
     					, {
-    				 	"columnDefs": [{"orderable":false, "aTargets":[0, 2, 4, 8, 9]}],
+    				 	"columnDefs": [{"orderable":false, "aTargets":[0, 5, 9, 10, 11]}],
          	        	"ajax":"server/list",
          	        	"columns":[
          	        	           {
@@ -50,12 +50,19 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
          	        	        	  }
          	        	           },
          	        	           {
-         	        	        	   "data":"serverId",         	        	        	   
+         	        	        	   "data":"serverId"         	        	        	   
          	        	           },
          	        	           {
          	        	        	   "data":null,
          	        	        	   "render":function(data) {
          	        	        		   return data.host + ":" + data.port;
+         	        	        	   }
+         	        	           
+         	        	           },
+         	        	            {
+         	        	        	   "data":null,
+         	        	        	   "render":function(data) {
+         	        	        		   return data.realHost;
          	        	        	   }
          	        	           
          	        	           },
@@ -137,7 +144,7 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
     	
     		//批量操作 			
  			$(document).delegate('.server-btn-util > .right-btn-tool > button:eq(1)', 'click', function() {
-        		layer.confirm('请点击下方按钮选择操作:', {title:'批量操作工具', btn: ['批量监控', '批量添加', '批量删除'] //可以无限个按钮
+        		layer.confirm('请点击下方按钮选择操作:', {title:'批量操作工具', btn: ['批量监控', '批量添加', '批量删除'] 
 	        		,btn3: function(index, layero){
 	        				layer.close(index);
 	        				var checkboxList = $("td > input:checked"); 
@@ -219,6 +226,8 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
 	        			layer.close(index);
 	        			layer.open({
 	            			type:1,
+	            			anim:5,
+	            			shadeClose:true,
 	            			title:'批量添加服务器信息',
 	            			content:batchSaveHtml,
 	            			area: ['700px', '585px'],
@@ -239,7 +248,7 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
  			//筛选
  			$('.layui-table').delegate('.server-tags-label', 'click', function() {
  				var that = this;
- 				table.columns(8).search($(that).text()).draw();
+ 				table.columns(9).search($(that).text()).draw();
  			});
  			
  			//复制
@@ -248,9 +257,11 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
  				
  				layer.open({
 	        			type:1,
+	        			shadeClose:true,
+	        			anim:5,
 	        			title:'复制服务器信息',
 	        			content:singleSaveHtml,
-	        			area: ['680px', '580px'],
+	        			area: ['680px', '640px'],
 	        			success:function() {
 	        				$.each(data, function(key, value) {
 	        					if ($("#" + key)) {
@@ -277,9 +288,11 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
         		var data = table.row( $(this).parents('tr') ).data();
         		layer.open({
         			type:1,
+        			shadeClose:true,
+        			anim:5,
         			title:'编辑服务器信息',
         			content:singleSaveHtml,
-        			area: ['680px', '580px'],
+        			area: ['680px', '640px'],
         			success:function() {
         				$.each(data, function(key, value) {
         					if ($("#" + key)) {
@@ -390,7 +403,7 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
 				}
 				var that = this;
 				table.ajax.url(ajaxUrl).load(function(json) {
-					table.columns(8).search('').draw();
+					table.columns(9).search('').draw();
 					$(that).removeClass("layui-btn-primary").addClass("layui-btn-normal").siblings("button").removeClass("layui-btn-normal").addClass("layui-btn-primary");  			
 				}, false);
 				
@@ -400,9 +413,11 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
 	    	$('.server-btn-util > .right-btn-tool > button:eq(0)').click(function() {    		    		
 	    		layer.open({
 	    			type:1,
+	    			shadeClose:true,
+	    			anim:5,
 	    			title:'添加新的服务器',
 	    			content:singleSaveHtml,
-	    			area: ['680px', '580px'],
+	    			area: ['680px', '640px'],
 	    			success:function() {
 	    				form.render();
 	    			}
@@ -450,6 +465,8 @@ layui.use(['element', 'layer', 'form', 'util'], function () {
 	    		
 	    		layer.open({
 	    			type:1,
+	    			shadeClose:true,
+	    			anim:5,
 	    			title:'附加项填写',
 	    			content:html,
 	    			area:['600px', '360px'],
