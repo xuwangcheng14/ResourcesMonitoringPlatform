@@ -1,7 +1,7 @@
 # ResourcesMonitoringPlatform
 Linux/Weblogic/Jvm资源实时监控
 
-测试地址：http://www.xuwangcheng.cn/rmp
+测试地址：https://www.xuwangcheng.com/rmp
 
 性能测试过程中，对linux/weblogic/jvm的实时监控并能保存记录。
 
